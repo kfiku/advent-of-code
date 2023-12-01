@@ -1,3 +1,4 @@
 #!/bin/bash
 
-deno run --allow-all --watch $1/index.ts
+cd "$1"
+deno run --allow-all --watch ./index.ts
