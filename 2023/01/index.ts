@@ -22,17 +22,16 @@ function sum(numbers: number[]) {
 }
 
 const acceptedDigits = [
-  ["one", '1'],
-  ["two", '2'],
-  ["three", '3'],
-  ["four", '4'],
-  ["five", '5'],
-  ["six", '6'],
-  ["seven", '7'],
-  ["eight", '8'],
-  ["nine", '9'],
+  ["one", "1"],
+  ["two", "2"],
+  ["three", "3"],
+  ["four", "4"],
+  ["five", "5"],
+  ["six", "6"],
+  ["seven", "7"],
+  ["eight", "8"],
+  ["nine", "9"],
 ] as const;
-
 
 function findNr(line: string) {
   const twoNumbers = `${findFirst(line)}${findLast(line)}`;
@@ -45,15 +44,15 @@ function findFirst(line: string) {
     const letter = line[i];
 
     if (+letter > 0) {
-      return letter
+      return letter;
     }
 
     for (let j = 0; j < acceptedDigits.length; j++) {
       const [text, nr] = acceptedDigits[j];
-      const world = line.substring(i, i + text.length)
+      const world = line.substring(i, i + text.length);
 
       if (world === text) {
-        return +nr
+        return +nr;
       }
     }
   }
@@ -64,15 +63,15 @@ function findLast(line: string) {
     const letter = line[i];
 
     if (+letter > 0) {
-      return letter
+      return letter;
     }
 
     for (let j = 0; j < acceptedDigits.length; j++) {
       const [text, nr] = acceptedDigits[j];
-      const world = line.substring(i - text.length, i)
+      const world = line.substring(i - text.length, i);
 
       if (world === text) {
-        return +nr
+        return +nr;
       }
     }
   }
