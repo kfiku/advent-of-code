@@ -6,7 +6,7 @@ const part = +Deno.args[0] || 1;
 let cards = 0;
 
 async function run() {
-  if(part === 1) {
+  if (part === 1) {
     await lineByLine("./input.txt", part1);
 
     printResults(13, numbers);
@@ -15,26 +15,24 @@ async function run() {
 
     printResults(30, [cards]);
   }
-
 }
 
 function part1(line: string) {
-  const {winnings, numbers} = lineToObj(line)
-  const result = getResult1(numbers, winnings)
+  const { winnings, numbers } = lineToObj(line);
+  const result = getResult1(numbers, winnings);
 
   numbers.push(result);
 }
 
-const duplicates: number[] = []
+const duplicates: number[] = [];
 function part2(line: string) {
-  cards++
-  const {nr, winnings, numbers} = lineToObj(line)
-  const wins = getResult2(numbers, winnings)
+  cards++;
+  const { nr, winnings, numbers } = lineToObj(line);
+  const wins = getResult2(numbers, winnings);
 
   addDuplicates(wins, nr);
   processDuplicates(nr, wins);
 }
-
 
 function processDuplicates(nr: number, wins: number) {
   const lineDuplicates = duplicates[nr] || 0;
@@ -74,17 +72,18 @@ function isWinningSymbol(sym: number, winnings: number[]) {
 }
 
 function lineToObj(line: string) {
-  const nr = +(line.split(":")[0].split("Card ")[1])
+  const nr = +(line.split(":")[0].split("Card ")[1]);
   const [winnings, numbers] = line
     .replaceAll("  ", " ")
-    .split(': ')[1]
-    .split(' | ')
-    .map(numbersString => numbersString
-      .split(' ')
-      .map(numberString => +numberString)
-    )
+    .split(": ")[1]
+    .split(" | ")
+    .map((numbersString) =>
+      numbersString
+        .split(" ")
+        .map((numberString) => +numberString)
+    );
 
-  return {nr, winnings, numbers};
+  return { nr, winnings, numbers };
 }
 
 run();
