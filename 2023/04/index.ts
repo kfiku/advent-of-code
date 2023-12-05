@@ -1,25 +1,72 @@
 import { lineByLine, printResults } from "../utils/utils.ts";
 
+const numbers: number[] = [];
+const part = +Deno.args[0] || 1;
+
+let cards = 0;
+
 async function run() {
-  const numbers: number[] = [];
+  if(part === 1) {
+    await lineByLine("./input.txt", part1);
 
-  await lineByLine("./input.txt", (line) => {
-    const nr = processLine(line);
+    printResults(13, numbers);
+  } else {
+    await lineByLine("./input.txt", part2);
 
-    numbers.push(nr);
-  });
+    printResults(30, [cards]);
+  }
 
-  printResults(13, numbers);
 }
 
-function processLine(line: string) {
+function part1(line: string) {
   const {winnings, numbers} = lineToObj(line)
-  const result = numbers.reduce((acc, curr)  => {
-    const win = isWinningSymbol(curr, winnings)
-    return win ? (acc === 0 ? 1 : acc * 2) : acc
-  }, 0)
+  const result = getResult1(numbers, winnings)
 
-  return result;
+  numbers.push(result);
+}
+
+const duplicates: number[] = []
+function part2(line: string) {
+  cards++
+  const {nr, winnings, numbers} = lineToObj(line)
+  const wins = getResult2(numbers, winnings)
+
+  addDuplicates(wins, nr);
+  processDuplicates(nr, wins);
+}
+
+
+function processDuplicates(nr: number, wins: number) {
+  const lineDuplicates = duplicates[nr] || 0;
+  for (let i = 0; i < lineDuplicates; i++) {
+    addDuplicates(wins, nr);
+    cards++;
+  }
+}
+
+function addDuplicates(wins: number, nr: number) {
+  for (let i = 0; i < wins; i++) {
+    const duplicateNr = nr + i + 1;
+    if (!duplicates[duplicateNr]) {
+      duplicates[duplicateNr] = 0;
+    }
+
+    duplicates[duplicateNr]++;
+  }
+}
+
+function getResult1(numbers: number[], winnings: number[]) {
+  return numbers.reduce((acc, curr) => {
+    const win = isWinningSymbol(curr, winnings);
+    return win ? (acc === 0 ? 1 : acc * 2) : acc;
+  }, 0);
+}
+
+function getResult2(numbers: number[], winnings: number[]) {
+  return numbers.reduce((acc, curr) => {
+    const win = isWinningSymbol(curr, winnings);
+    return win ? acc + 1 : acc;
+  }, 0);
 }
 
 function isWinningSymbol(sym: number, winnings: number[]) {
@@ -27,6 +74,7 @@ function isWinningSymbol(sym: number, winnings: number[]) {
 }
 
 function lineToObj(line: string) {
+  const nr = +(line.split(":")[0].split("Card ")[1])
   const [winnings, numbers] = line
     .replaceAll("  ", " ")
     .split(': ')[1]
@@ -36,7 +84,7 @@ function lineToObj(line: string) {
       .map(numberString => +numberString)
     )
 
-  return {winnings, numbers};
+  return {nr, winnings, numbers};
 }
 
 run();
