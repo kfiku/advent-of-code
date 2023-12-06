@@ -1,5 +1,7 @@
 import { readline } from "https://deno.land/x/readline@v1.1.0/mod.ts";
 
+console.time("process")
+
 export function printResults(expected: number, numbers: number[]) {
   const result = sum(numbers);
 
@@ -8,6 +10,7 @@ export function printResults(expected: number, numbers: number[]) {
   }
 
   console.log(expected === result, expected, "===", result);
+  console.timeEnd("process")
 }
 
 export async function lineByLine(
@@ -27,4 +30,8 @@ export async function lineByLine(
 
 export function sum(numbers: number[]) {
   return numbers.reduce((acc, curr) => acc + curr, 0);
+}
+
+export function multiply(numbers: number[]) {
+  return numbers.reduce((acc, curr) => acc * curr, 1);
 }

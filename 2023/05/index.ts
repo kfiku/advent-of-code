@@ -1,19 +1,13 @@
 import { lineByLine, printResults } from "../utils/utils.ts";
 
-const part = +Deno.args[0] || 1;
+// const part = +Deno.args[0] || 1;
 
 async function run() {
-  if (part === 1) {
-    await lineByLine("./input.txt", part1);
+  await lineByLine("./input.txt", part1);
 
-    const result = process();
+  const result = process();
 
-    printResults(35, [result]);
-  } else {
-    // await lineByLine("./input.txt", part2);
-
-    // printResults(30, [cards]);
-  }
+  printResults(46, [result]);
 }
 
 interface Mapper {
@@ -24,33 +18,48 @@ interface Mapper {
   }[];
 }
 
-let seeds: number[] = [];
+const seeds: [number, number][] = [];
 let currentMap: Partial<Mapper> = {};
 const maps: Mapper[] = [];
 
 function process() {
-  const locationResults = seeds.map((seed) =>
-    maps.reduce((acc, curr) => {
-      const map = curr.maps.find((map) =>
-        acc >= map.src[0] && acc <= map.src[1]
-      );
+  let minResult = Infinity;
 
-      if (map) {
-        return map.destFrom + (acc - map.src[0]);
+  seeds.forEach(([start, end], id) => {
+    console.log(`${id}/${seeds.length}`, start, end);
+    for (let i = start; i < end; i++) {
+      const result = maps.reduce((acc, curr) => {
+        // console.log(acc);
+
+        const map = curr.maps.find((map) =>
+          acc >= map.src[0] && acc <= map.src[1]
+        );
+
+        if (map) {
+          return map.destFrom + (acc - map.src[0]);
+        }
+
+        return acc;
+      }, i);
+
+      if (minResult > result) {
+        minResult = result;
       }
+    }
+  });
 
-      return acc;
-    }, seed)
-  );
-
-  return locationResults.sort((a, b) => {
-    return a - b;
-  })[0];
+  return minResult;
 }
 
 function part1(line: string) {
   if (!seeds.length) {
-    seeds = line.split("seeds: ")[1].split(" ").map((seed) => +seed);
+    const seedPairs = line.split("seeds: ")[1].split(" ").map((seed) => +seed);
+    seedPairs.forEach((end, id) => {
+      if (id % 2 !== 0) {
+        const start = seedPairs[id - 1];
+        seeds.push([start, start + end - 1]);
+      }
+    });
 
     return;
   }
