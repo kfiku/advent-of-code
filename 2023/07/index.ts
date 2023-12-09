@@ -30,10 +30,9 @@ function process() {
       return a.score > b.score ? 1 : -1;
     })
     .map((score, i) => {
-      console.log(i+1,  score.hand, score.score);
+      console.log(i + 1, score.hand, score.score);
       return score.bid * (i + 1);
     });
-;
 
   return scores;
 }
@@ -81,9 +80,9 @@ function getHighCardScore(hand: string) {
 }
 
 function getTypeScore(hand: string) {
-  if (hand === 'JJJJJ') {
+  if (hand === "JJJJJ") {
     // Five of a kind
-    return 7
+    return 7;
   }
 
   const cards: Record<string, number> = {};
@@ -107,9 +106,9 @@ function getTypeScore(hand: string) {
   const jCount = part === 2 ? cards.J : 0;
 
   if (jCount) {
-    const updatedHand = updateBestScoreWithJ(hand, counts)
+    const updatedHand = updateBestScoreWithJ(hand, counts);
 
-    return getTypeScore(updatedHand)
+    return getTypeScore(updatedHand);
   }
 
   if (counts[5]) {
@@ -155,15 +154,15 @@ function updateBestScoreWithJ(hand: string, counts: string[]) {
     if (counts.length <= 1) {
       console.log(hand);
 
-      return hand
+      return hand;
     }
 
-    return updateBestScoreWithJ(hand, counts.slice(0, counts.length - 1))
+    return updateBestScoreWithJ(hand, counts.slice(0, counts.length - 1));
   }
 
-  const symbolToReplace = bestSymbol.replace(/J/, '')[0]
+  const symbolToReplace = bestSymbol.replace(/J/, "")[0];
   const newHand = hand.replace(/J/g, symbolToReplace);
 
   // console.log(hand, bestSymbol, symbolToReplace, newHand);
-  return newHand
+  return newHand;
 }

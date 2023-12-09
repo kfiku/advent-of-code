@@ -38,9 +38,9 @@ export function multiply(numbers: number[]) {
 
 function gcd(a: number, b: number) {
   while (b != 0) {
-      let t = b;
-      b = a % b;
-      a = t;
+    let t = b;
+    b = a % b;
+    a = t;
   }
   return a;
 }
@@ -52,7 +52,7 @@ function lcm(a: number, b: number) {
 export function lcmOfArray(arr: number[]) {
   let currentLcm = arr[0];
   for (let i = 1; i < arr.length; i++) {
-      currentLcm = lcm(currentLcm, arr[i]);
+    currentLcm = lcm(currentLcm, arr[i]);
   }
   return currentLcm;
 }

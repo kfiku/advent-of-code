@@ -1,4 +1,10 @@
-import { lcmOfArray, lineByLine, multiply, printResults, sum } from "../utils/utils.ts";
+import {
+  lcmOfArray,
+  lineByLine,
+  multiply,
+  printResults,
+  sum,
+} from "../utils/utils.ts";
 
 const part = +Deno.args[0] || 1;
 
@@ -36,25 +42,25 @@ function part1(line: string) {
 }
 
 function process() {
-  return processOne(firstKey, lastKey)
+  return processOne(firstKey, lastKey);
 }
 
 function process2() {
-  const networkKeys = Object.keys(networks)
-  const firstKeys = networkKeys.filter(k => k.endsWith("A"))
-  const lastKeys = networkKeys.filter(k => k.endsWith("Z"))
+  const networkKeys = Object.keys(networks);
+  const firstKeys = networkKeys.filter((k) => k.endsWith("A"));
+  const lastKeys = networkKeys.filter((k) => k.endsWith("Z"));
   console.log(firstKeys, "->", lastKeys);
 
-  const res: number[] = []
-  firstKeys.map(first => {
-    lastKeys.map(last => {
-      res.push(processOne(first, last))
-    })
-  })
+  const res: number[] = [];
+  firstKeys.map((first) => {
+    lastKeys.map((last) => {
+      res.push(processOne(first, last));
+    });
+  });
 
-  const finalSteps = res.filter(r => r !== Infinity);
+  const finalSteps = res.filter((r) => r !== Infinity);
 
-  return lcmOfArray(finalSteps)
+  return lcmOfArray(finalSteps);
 }
 
 function processOne(first: string, last: string) {
@@ -64,11 +70,11 @@ function processOne(first: string, last: string) {
   const lastStepId = stepper.length - 1;
 
   while (key !== last) {
-    key = networks[key][stepper[stepId]]
+    key = networks[key][stepper[stepId]];
     stepId++;
     steps++;
 
-    if(steps % 10_000_000 === 0) {
+    if (steps % 10_000_000 === 0) {
       console.log(steps, key);
     }
 
@@ -77,7 +83,7 @@ function processOne(first: string, last: string) {
     }
 
     if (steps > 1_000_000) {
-      return Infinity
+      return Infinity;
     }
   }
 
