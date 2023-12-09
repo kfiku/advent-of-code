@@ -32,6 +32,10 @@ export function sum(numbers: number[]) {
   return numbers.reduce((acc, curr) => acc + curr, 0);
 }
 
+export function sub(numbers: number[]) {
+  return numbers.reduce((acc, curr) => curr - acc, 0);
+}
+
 export function multiply(numbers: number[]) {
   return numbers.reduce((acc, curr) => acc * curr, 1);
 }

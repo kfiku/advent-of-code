@@ -1,4 +1,4 @@
-import { lineByLine, printResults, sum } from "../utils/utils.ts";
+import { lineByLine, printResults, sub, sum } from "../utils/utils.ts";
 
 const part = +Deno.args[0] || 1;
 
@@ -8,14 +8,47 @@ async function run() {
     const result = process();
     printResults(1877825184, result);
   } else {
-    await lineByLine("./input.txt", part1);
-    const result = process();
+    await lineByLine("./input.txt", part2);
+    const result = process2();
 
-    printResults(18024643846273, result);
+    printResults(1108, result);
   }
 }
 
 const lines: number[][] = [];
+function part2(line: string) {
+  let values: number[] = line.split(" ").map((n) => +n);
+  const prev = getPrevValue(values);
+
+  values = [prev, ...values];
+
+  lines.push(values);
+}
+
+function process2() {
+  const firstNumber = lines.map((l) => l[0]);
+
+  return firstNumber;
+}
+
+function getPrevValue(values: number[], prevValues: number[][] = []) {
+  const diffs: number[] = [];
+
+  for (let i = 1; i < values.length; i++) {
+    diffs.push(values[i] - values[i - 1]);
+  }
+
+  if (!isAllZeros(diffs)) {
+    return getPrevValue(diffs, [values, ...prevValues]);
+  }
+
+  const final = [diffs, values, ...prevValues].map((v) => v[0]);
+
+  return sub(final);
+}
+
+////
+
 function part1(line: string) {
   const values: number[] = line.split(" ").map((n) => +n);
   const nextValue = getNextValue(values);
