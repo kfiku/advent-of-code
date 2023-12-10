@@ -162,8 +162,10 @@ function reverseMove([x, y]: number[]) {
 
 ////
 
+const dots: string[][] = []
 function part2(line: string) {
-  console.log(line);
+  const dotsLine = line.split('').filter(d => d === '.');
+  dots.push(dotsLine);
 }
 
 function process2() {
