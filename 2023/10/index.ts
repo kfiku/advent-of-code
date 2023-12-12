@@ -6,7 +6,7 @@ async function run() {
   if (part === 1) {
     await lineByLine("./input.txt", part1);
     const result = process1();
-    printResults(8, [result]);
+    printResults(6903, [result]);
   } else {
     console.clear()
     await lineByLine("./input.txt", part2);
@@ -27,6 +27,17 @@ const directions = {
   "|": [[0, 1], [0, -1]],
   ".": [[], []],
 };
+
+const symbolDict = {
+  '|': '│',
+  '-': '─',
+  'F': '┌',
+  'L': '└',
+  'J': '┘',
+  '7': '┐',
+  'S': 'S'
+};
+
 type Sym = keyof typeof directions;
 
 const startSymbol = "S";
@@ -81,6 +92,10 @@ function walkMaze(maze: string[], direction: Direction) {
   }
 
   const nextDir = getNextPos(maze, direction);
+
+  if (isPointOnABorder(nextDir.pos)) {
+    console.log('BORDER', nextDir);
+  }
 
   return nextDir;
 }
