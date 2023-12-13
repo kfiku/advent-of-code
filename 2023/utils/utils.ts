@@ -5,11 +5,12 @@ console.time("process");
 export function printResults(expected: number, numbers: number[]) {
   const result = sum(numbers);
 
-  if (result !== expected) {
-    console.log(numbers);
+  if (expected === result) {
+    console.log("OK", result);
+  } else {
+    console.log("WRONG", result + " !== " + expected);
   }
 
-  console.log(expected === result, expected, "===", result);
   console.timeEnd("process");
 }
 

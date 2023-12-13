@@ -8,7 +8,7 @@ async function run() {
     const result = process1();
     printResults(6903, [result]);
   } else {
-    console.clear()
+    console.clear();
     await lineByLine("./input.txt", part2);
     const result = process2();
 
@@ -29,13 +29,13 @@ const directions = {
 };
 
 const symbolDict = {
-  '|': '│',
-  '-': '─',
-  'F': '┌',
-  'L': '└',
-  'J': '┘',
-  '7': '┐',
-  'S': 'S'
+  "|": "│",
+  "-": "─",
+  "F": "┌",
+  "L": "└",
+  "J": "┘",
+  "7": "┐",
+  "S": "S",
 };
 
 type Sym = keyof typeof directions;
@@ -94,7 +94,7 @@ function walkMaze(maze: string[], direction: Direction) {
   const nextDir = getNextPos(maze, direction);
 
   if (isPointOnABorder(nextDir.pos)) {
-    console.log('BORDER', nextDir);
+    console.log("BORDER", nextDir);
   }
 
   return nextDir;
@@ -177,33 +177,33 @@ function reverseMove([x, y]: number[]) {
 
 ////
 
-const dots: [number,number][][] = []
-let flatDots: [number,number][] = []
-const borderX = [0]
-const borderY = [0]
+const dots: [number, number][][] = [];
+let flatDots: [number, number][] = [];
+const borderX = [0];
+const borderY = [0];
 function part2(line: string) {
   maze.push(line);
 
   const y = dots.length;
-  const dotsLine = line.split('').map((d, id) => {
-    if (d === '.') {
-      return [id, y]
+  const dotsLine = line.split("").map((d, id) => {
+    if (d === ".") {
+      return [id, y];
     }
   }).filter(Boolean) as [number, number][];
 
   dots.push(dotsLine);
 }
 
-const groupedDots: [number, number][][] = []
+const groupedDots: [number, number][][] = [];
 
 function process2() {
-  borderX.push(maze[0].length -1)
-  borderY.push(maze.length -1)
+  borderX.push(maze[0].length - 1);
+  borderY.push(maze.length - 1);
 
-  flatDots = dots.flat()
+  flatDots = dots.flat();
 
-  const group = walk(maze, flatDots[0], [0,0])
-  console.log('group', group, group.length, 49);
+  const group = walk(maze, flatDots[0], [0, 0]);
+  console.log("group", group, group.length, 49);
 
   // while (flatDots.length > 1) {
   //   const dot = flatDots.splice(0, 1)[0]
@@ -220,76 +220,75 @@ function process2() {
   return 0;
 }
 
-type Point = number[]
+type Point = number[];
 
 function walk(maze: string[], point: Point, from: Point, result: Point[] = []) {
-  console.log('WALK', point, from, result);
-  result.push(point)
+  console.log("WALK", point, from, result);
+  result.push(point);
 
   for (let i = 0; i < aroundOptions.length; i++) {
     const a = aroundOptions[i];
 
     if (from[0] === a[0] && from[1] === a[1]) {
       // console.log('skip from');
-      continue
+      continue;
     }
 
-    const nextPoint = [point[0] + a[0], point[1] + a[1]] as Point
-    const isInMaze = isPointOnMaze(nextPoint)
-    const isInResult = isPointInResults(nextPoint, result)
-    const dir = getDirection(maze, nextPoint)
-    if (!isInMaze || isInResult || dir.symbol !== '.') {
+    const nextPoint = [point[0] + a[0], point[1] + a[1]] as Point;
+    const isInMaze = isPointOnMaze(nextPoint);
+    const isInResult = isPointInResults(nextPoint, result);
+    const dir = getDirection(maze, nextPoint);
+    if (!isInMaze || isInResult || dir.symbol !== ".") {
       // console.log('skip', nextPoint, { isInMaze, isInResult });
-      continue
+      continue;
     }
 
-    walk(maze, nextPoint, reverseMove(a), result)
+    walk(maze, nextPoint, reverseMove(a), result);
   }
 
-  return result
+  return result;
 }
 
-function isPointOnMaze([x,y]: Point) {
-  return (x >= borderX[0] && x <= borderX[1])
-    && (y >= borderY[0] && y <= borderY[1])
+function isPointOnMaze([x, y]: Point) {
+  return (x >= borderX[0] && x <= borderX[1]) &&
+    (y >= borderY[0] && y <= borderY[1]);
 }
 
-function isPointInResults([x,y]: Point, results: Point[]) {
-  return results.some(([rx, ry]) => rx === x && ry === y)
+function isPointInResults([x, y]: Point, results: Point[]) {
+  return results.some(([rx, ry]) => rx === x && ry === y);
 }
-
 
 const closer = [0, 1];
 function addToGroup(dot: [number, number], groups: [number, number][][]) {
-  const [x,y] = dot
+  const [x, y] = dot;
   // console.log('CHECKING', dot);
 
   for (let i = 0; i < groups.length; i++) {
     const group = groups[i];
 
     const isTouching = group.some(([gx, gy]) => {
-      return closer.includes(Math.abs(gx - x)) && closer.includes(Math.abs(gy - y))
-    })
+      return closer.includes(Math.abs(gx - x)) &&
+        closer.includes(Math.abs(gy - y));
+    });
 
     if (isTouching) {
       group.push(dot);
-      return
+      return;
     }
   }
 
-  groups.push([dot])
+  groups.push([dot]);
 }
-
 
 function canPass(dir: Direction, from: number[]) {
-  const m = matchDir(from, dir.direction)
+  const m = matchDir(from, dir.direction);
   // console.log(dir.symbol, dir.direction, from, m);
 
-  return m
+  return m;
 }
 
-function isPointOnABorder([x,y]: number[]) {
-  return borderX.includes(x) || borderY.includes(y)
+function isPointOnABorder([x, y]: number[]) {
+  return borderX.includes(x) || borderY.includes(y);
 }
 
 function printMaze(maze: string[], [x, y]: number[]) {
