@@ -10,7 +10,7 @@ async function run() {
   } else {
     await lineByLine("./input.txt", part1);
     const result = process2();
-    printResults(400, result);
+    printResults(105606, result);
   }
 }
 
@@ -20,18 +20,46 @@ function part1(line: string) {
   lines.push(line.split(''))
 }
 
+const m: Record<string, number> = {};
+const dups: Record<number, string> = {};
+const reapited = []
+const minDuplicates = 300
 function process2() {
   const full = 1_000_000_000
+  // const full = 1000
   const onePercentile = full / 1000
+  let duplicates = 0
+  let loDuplicate = full
+  let hiDuplicate = 0
 
-  for (let i = 0; i < 1_000_000_000; i++) {
+  for (let i = 0; i < full; i++) {
     if (i % onePercentile === 0) {
       console.log((i / onePercentile) / 10 + "%");
     }
+
+    const s = toString()
+    const did = m[s]
+
+    if (did) {
+      // console.log(i, did);
+      dups[did] = JSON.stringify(lines)
+      duplicates++
+      loDuplicate = Math.min(did, loDuplicate)
+      hiDuplicate = Math.max(did, hiDuplicate)
+      if(duplicates > minDuplicates && did === loDuplicate) {
+        console.log('DUPLICATES', i, loDuplicate, hiDuplicate);
+        const wantedId = full
+        const wantedDupsId = loDuplicate + (wantedId-i) % (hiDuplicate-loDuplicate+1)
+        lines = JSON.parse(dups[wantedDupsId])
+        break
+      }
+    } else {
+      duplicates = 0
+      m[s] = i
+    }
+
     spinCycle()
   }
-
-  print()
 
   return count();
 }
@@ -113,7 +141,11 @@ function count() {
 }
 
 function print() {
-  console.log(lines.map(l => l.join("")).join('\n'));
+  console.log(toString());
+}
+
+function toString() {
+  return lines.map(l => l.join("")).join('\n');
 }
 
 function moveNorth(lines: string[][], x: number, y: number) {
