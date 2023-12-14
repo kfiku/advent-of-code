@@ -18,7 +18,7 @@ async function run() {
   if (part === 1) {
     await lineByLine(file, part1);
     const result = process1();
-    printResults(8270, result);
+    // printResults(8270, result);
     printResults(21, result);
   } else {
     await lineByLine(file, part2);
@@ -165,11 +165,15 @@ function process1() {
   return counts;
 }
 
+const reg1 = /\.+/g;
+const reg2 = /^\.+/g;
+const reg3 = /\.+$/g;
 function trimList(list: string) {
   return list
-    .replace(/\.+/g, ".")
-    .replace(/^\.+/g, "")
-    .replace(/\.+$/g, "");
+    .replace(reg1, ".")
+    .replace(reg2, "")
+    .replace(reg3, "")
+  ;
 }
 
 function fill(
@@ -234,10 +238,29 @@ function countOptions(spring: Spring) {
     return partsResult4;
   }
 
+  //             800_472_431_850
+  //               1_855_967_520
+  if (optionsToCheck > 1_000_000) {
+    const optionsToCheck2 = countAllQuestionMarks2(spring);
+    console.log("TO MANY OPTIONS TO CHECK:", optionsToCheck, optionsToCheck2);
+    // Deno.exit()
+    // return 0
+  }
+
   const base = nums.map((n) => getMultipleSigns("#", n)).map((d, id) =>
     id ? "." + d : d
   );
 
+  // TRY TO FILL QUICKER
+  const filles2: string[] = [];
+  const minOption = base.join('');
+  const hashes = sum(nums)
+  const dots = fullLength - hashes
+  console.log({minOption, hashes, dots, fullLength});
+  fill2(filles2, list, minOption, dots, hashes, "");
+  return filles2.length;
+
+  // LONGER FILL
   const validate = (fillArray: number[]) => {
     const fill = fillArray.map((f) => getMultipleSigns(".", f));
     const a = zip(fill, base);
@@ -252,6 +275,120 @@ function countOptions(spring: Spring) {
   fill(filles, [], placesToInsert, dotsToPlay, validate);
 
   return filles.length;
+}
+
+function fill2(
+  arr: string[],
+  list: string,
+  minOption: string,
+  maxDots: number,
+  maxHashes: number,
+  txt: string,
+  fillWith = "",
+  dots = 0,
+  hashes = 0,
+) {
+  txt += fillWith;
+
+  if (txt.length === list.length) {
+    if (validateFromStart(txt, minOption)) {
+      console.log("VALID", txt);
+      arr.push(txt);
+    } else {
+      console.log("NOT VALID", txt, list);
+    }
+  } else {
+    const nextD = list[txt.length];
+
+    if (nextD === "?") {
+      // if (hashes + 1 > maxHashes) {
+      //   console.log("to much hashes", txt + "#");
+      // }
+
+      if (hashes + 1 <= maxHashes && validateFromStart(txt + "#", minOption)) {
+        fill2(
+          arr,
+          list,
+          minOption,
+          maxDots,
+          maxHashes,
+          txt,
+          "#",
+          dots,
+          hashes + 1,
+        );
+        // console.log("1. valid", txt + "#");
+      } else {
+        // console.log('1. not valid', txt + "#");
+      }
+
+      // if (dots + 1 > maxDots) {
+      //   console.log("to much dots", txt + ".", {maxDots}, dots + 1);
+      // }
+
+      if (dots + 1 <= maxDots && validateFromStart(txt + ".", minOption)) {
+        fill2(
+          arr,
+          list,
+          minOption,
+          maxDots,
+          maxHashes,
+          txt,
+          ".",
+          dots + 1,
+          hashes,
+        );
+        // console.log("2. valid", txt + ".");
+      } else {
+        // console.log("2. not valid", txt + ".");
+      }
+    } else {
+      // console.log("will next with", nextD);
+      const dplus = nextD === "." ? 1 : 0;
+      const hplus = dplus ? 0 : 1;
+      fill2(
+        arr,
+        list,
+        minOption,
+        maxDots,
+        maxHashes,
+        txt,
+        nextD,
+        dots + dplus,
+        hashes + hplus,
+      );
+    }
+  }
+}
+
+function validateFromStart(proposition: string, minOption: string) {
+  const trimmedProposition = trimList(proposition);
+
+  if (trimmedProposition.length < minOption.length) {
+    // return true
+  }
+  if (trimmedProposition.length === 0) {
+    // console.log('.....');
+    return true
+  }
+
+  // console.log("PROPO" proposition, trimmedProposition);
+
+  for (let i = 0; i < trimmedProposition.length; i++) {
+    const dp = trimmedProposition[i];
+    const dl = minOption[i];
+
+    if (dp !== dl && dl !== "?") {
+      console.log('X. not valid', proposition, trimmedProposition);
+      return false;
+    } else {
+      // console.log('valid', trimmedProposition);
+    }
+  }
+
+  // console.log('valid', proposition);
+
+  return true;
 }
 
 function validateOption(proposition: string, list: string) {
@@ -417,6 +554,36 @@ function countAllQuestionMarks({ list, nums }: Spring) {
   const minLength = sum(nums || []) + between;
   const placesToInsert = between + 2;
   const diff = fullLength - minLength;
+
+  const upBase = placesToInsert + diff - 1;
+  const up = factorial(upBase);
+  const down = factorial(diff) * factorial(upBase - diff);
+
+  // console.log(list + " " + nums.join(',') + " => l:" + fullLength + " m:" + minLength + " miejsc do wstawienia:" + placesToInsert)
+  // console.log(
+  //   "(" + placesToInsert + " + " + diff + " - " + 1 + ")!" +
+  //   "\n" +
+  //   "----------------" +
+  //   "\n" +
+  //   "(" + diff + "!" + " * " + "(" + placesToInsert + " + " + diff + " - " + 1  + " - " + diff + ")!" +  ")",
+  // );
+
+  // ?????????? 3,2,2 => l:12, m:9, miejsc do wstawienia: 4
+  // (4 + 3 - 1)!
+  // ------------------
+  // 3! * ((4 + 3 - 1) - 3)!
+
+  return Math.round(up / down);
+}
+
+function countAllQuestionMarks2({ list, nums }: Spring) {
+  const ll = list.replace(/[.#]/g, "").length;
+  // const ll = list.length;
+  // const fullLength = l.length;
+  const between = nums.length - 1;
+  const minLength = sum(nums || []) + between;
+  const placesToInsert = between + 2;
+  const diff = ll - minLength;
 
   const upBase = placesToInsert + diff - 1;
   const up = factorial(upBase);
