@@ -2,6 +2,19 @@ import { readline } from "https://deno.land/x/readline@v1.1.0/mod.ts";
 
 console.time("process");
 
+export function factorial(num: number) {
+  if (num < 0) {
+    return Infinity;
+  }
+
+  let fact = 1;
+  for (let i = num; i > 1; i--) {
+    fact *= i;
+  }
+
+  return fact;
+}
+
 export function printResults(expected: number, numbers: number[]) {
   const result = sum(numbers);
 

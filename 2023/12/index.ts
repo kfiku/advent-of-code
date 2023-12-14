@@ -1,13 +1,18 @@
-import { factorial, lineByLine, multiply, printResults, sum } from "../utils/utils.ts";
+import {
+  factorial,
+  lineByLine,
+  multiply,
+  printResults,
+  sum,
+} from "../utils/utils.ts";
 
 // ??????????? 3,2,2 => l:12, m:9, miejsc do wstawienia: 4
 // (4 + 3 - 1)!
 // ------------------
 // 3! * ((4 + 3 - 1) - 3)!
 
-
 const part = +Deno.args[0] || 1;
-const file = Deno.args[1] || "./input.txt"
+const file = Deno.args[1] || "./input.txt";
 
 async function run() {
   if (part === 1) {
@@ -108,31 +113,31 @@ function minimizeReverse(l: string, n: number[]) {
 
   return {
     list: stringReverse(list),
-    nums: arrayReverse(nums)
-  }
+    nums: arrayReverse(nums),
+  };
 }
 
 function stringReverse(l: string) {
-  let rl = ""
-  const ll = l.length
+  let rl = "";
+  const ll = l.length;
 
   for (let i = ll - 1; i >= 0; i--) {
-    rl += l[i]
+    rl += l[i];
   }
 
-  return rl
+  return rl;
 }
 
 function arrayReverse<T>(a: T[]) {
-  const ra: T[] = []
-  const l = a.length
+  const ra: T[] = [];
+  const l = a.length;
 
   for (let i = 0; i < l; i++) {
     const element = a[i];
-    ra[l - i - 1] = element
+    ra[l - i - 1] = element;
   }
 
-  return ra
+  return ra;
 }
 
 function process1() {
@@ -150,8 +155,8 @@ function process1() {
       // lines[i],
     );
 
-    if(opts === 0) {
-      console.log('ERROR', springs[i], lines[i]);
+    if (opts === 0) {
+      console.log("ERROR", springs[i], lines[i]);
     }
 
     counts.push(opts || 1);
@@ -160,11 +165,11 @@ function process1() {
   return counts;
 }
 
-function trimList(list:string) {
+function trimList(list: string) {
   return list
-    .replace(/\.+/g, '.')
-    .replace(/^\.+/g, '')
-    .replace(/\.+$/g, '')
+    .replace(/\.+/g, ".")
+    .replace(/^\.+/g, "")
+    .replace(/\.+$/g, "");
 }
 
 function fill(
@@ -172,7 +177,7 @@ function fill(
   before: number[],
   len: number,
   fillWith: number,
-  validate: (fillArray: number[]) => boolean
+  validate: (fillArray: number[]) => boolean,
 ) {
   if (len <= 1) {
     const nextBefore = [...before, fillWith];
@@ -209,24 +214,24 @@ function countOptions(spring: Spring) {
     return optionsToCheck;
   }
 
-  const partsResult = countByPartsIfPossible(spring)
+  const partsResult = countByPartsIfPossible(spring);
   if (partsResult) {
-    return partsResult
+    return partsResult;
   }
 
-  const partsResult2 = countByPartsIfPossible2(spring)
+  const partsResult2 = countByPartsIfPossible2(spring);
   if (partsResult2) {
-    return partsResult2
+    return partsResult2;
   }
 
-  const partsResult3 = countByPartsIfPossible3(spring)
+  const partsResult3 = countByPartsIfPossible3(spring);
   if (partsResult3) {
-    return partsResult3
+    return partsResult3;
   }
 
-  const partsResult4 = countByPartsIfPossible4(spring)
+  const partsResult4 = countByPartsIfPossible4(spring);
   if (partsResult4) {
-    return partsResult4
+    return partsResult4;
   }
 
   const base = nums.map((n) => getMultipleSigns("#", n)).map((d, id) =>
@@ -241,7 +246,7 @@ function countOptions(spring: Spring) {
 
     // return true
     return validateOption(p, list);
-  }
+  };
 
   const filles: number[][] = [];
   fill(filles, [], placesToInsert, dotsToPlay, validate);
@@ -292,105 +297,116 @@ function zip(arr1: any[], arr2: any[]) {
 }
 
 function countByPartsIfPossible({ list, nums }: Spring) {
-  const largest = Math.max(...nums)
-  const largestL = nums.filter(n => n === largest).length
-  const lt = getMultipleSigns("#", largest)
+  const largest = Math.max(...nums);
+  const largestL = nums.filter((n) => n === largest).length;
+  const lt = getMultipleSigns("#", largest);
   if (!lt) {
-    return undefined
+    return undefined;
   }
-  const reg = new RegExp("." + lt + ".", "g")
-  const ltl = (list.match(reg) || []).length
+  const reg = new RegExp("." + lt + ".", "g");
+  const ltl = (list.match(reg) || []).length;
 
   if (largestL === ltl) {
-    const la = list.split(reg)
-    const na = nums.join("").split(largest + "").map(n => n.split("").map(n2 => +n2))
+    const la = list.split(reg);
+    const na = nums.join("").split(largest + "").map((n) =>
+      n.split("").map((n2) => +n2)
+    );
 
     const sr: number[] = la.map((l, id) => {
-      const n = na[id]
+      const n = na[id];
 
-      return countOptions({list: l, nums: n}) || 1
-    })
+      return countOptions({ list: l, nums: n }) || 1;
+    });
 
-    return multiply(sr)
+    return multiply(sr);
   }
 }
 
 function countByPartsIfPossible2({ list, nums }: Spring) {
-  const largest = Math.max(...nums)
-  const largest2 = Math.max(...nums.filter(n => n !== largest))
-  const diff = largest2 + 1
-  const toAdd = largest - diff
-  const lt = getMultipleSigns("#", diff)
+  const largest = Math.max(...nums);
+  const largest2 = Math.max(...nums.filter((n) => n !== largest));
+  const diff = largest2 + 1;
+  const toAdd = largest - diff;
+  const lt = getMultipleSigns("#", diff);
   if (!lt) {
-    return undefined
+    return undefined;
   }
-  const largestL = nums.filter(n => n === largest).length
-  const reg = new RegExp("[#?]{0,"+toAdd+"}" + lt + "[#?]{0,"+toAdd+"}", "g")
-  const ltMatches = list.match(reg) || []
-  const ltl = ltMatches.length
+  const largestL = nums.filter((n) => n === largest).length;
+  const reg = new RegExp(
+    "[#?]{0," + toAdd + "}" + lt + "[#?]{0," + toAdd + "}",
+    "g",
+  );
+  const ltMatches = list.match(reg) || [];
+  const ltl = ltMatches.length;
 
   if (largestL === ltl) {
-    const la = list.split(reg)
-    const na = nums.join("").split(largest + "").map(n => n.split("").map(n2 => +n2))
+    const la = list.split(reg);
+    const na = nums.join("").split(largest + "").map((n) =>
+      n.split("").map((n2) => +n2)
+    );
 
     const sr: number[] = la.map((l, id) => {
-      const n = na[id]
+      const n = na[id];
 
-      return countOptions({list: l, nums: n}) || 1
-    })
+      return countOptions({ list: l, nums: n }) || 1;
+    });
 
-    return multiply(sr)
+    return multiply(sr);
   }
 }
 
 function countByPartsIfPossible3({ list, nums }: Spring) {
-  const largest = Math.max(...nums)
-  const largest2 = Math.max(...nums.filter(n => n !== largest))
-  const diff = largest2 + 1
+  const largest = Math.max(...nums);
+  const largest2 = Math.max(...nums.filter((n) => n !== largest));
+  const diff = largest2 + 1;
   if (diff < 3) {
-    return undefined
+    return undefined;
   }
-  const largestL = nums.filter(n => n === largest).length
-  const txt = "." + "#[#?]{"+(largest-2)+"}#" + "."
-  const reg = new RegExp(txt, "g")
-  const ltMatches = list.match(reg) || []
-  const ltl = ltMatches.length
+  const largestL = nums.filter((n) => n === largest).length;
+  const txt = "." + "#[#?]{" + (largest - 2) + "}#" + ".";
+  const reg = new RegExp(txt, "g");
+  const ltMatches = list.match(reg) || [];
+  const ltl = ltMatches.length;
 
   if (largestL === ltl) {
-    const la = list.split(reg)
-    const na = nums.join("").split(largest + "").map(n => n.split("").map(n2 => +n2))
+    const la = list.split(reg);
+    const na = nums.join("").split(largest + "").map((n) =>
+      n.split("").map((n2) => +n2)
+    );
 
     const sr: number[] = la.map((l, id) => {
-      const n = na[id]
+      const n = na[id];
 
-      return countOptions({list: l, nums: n}) || 1
-    })
+      return countOptions({ list: l, nums: n }) || 1;
+    });
 
-    return multiply(sr)
+    return multiply(sr);
   }
 }
 
 function countByPartsIfPossible4({ list, nums }: Spring) {
   for (let i = 0; i < nums.length; i++) {
     const cn = nums[i];
-    const lt = getMultipleSigns("#", cn)
-    const reg = new RegExp("\\." + lt + "\\.", "g")
-    const ll = (list.match(reg) || []).length
-    const nl = nums.filter(n => n === cn).length
+    const lt = getMultipleSigns("#", cn);
+    const reg = new RegExp("\\." + lt + "\\.", "g");
+    const ll = (list.match(reg) || []).length;
+    const nl = nums.filter((n) => n === cn).length;
 
     if (ll === nl) {
       console.log(ll, nl);
 
-      const la = list.split(reg)
-      const na = nums.join("").split(cn + "").map(n => n.split("").map(n2 => +n2))
+      const la = list.split(reg);
+      const na = nums.join("").split(cn + "").map((n) =>
+        n.split("").map((n2) => +n2)
+      );
 
       const sr: number[] = la.map((l, id) => {
-        const n = na[id]
+        const n = na[id];
 
-        return countOptions({list: l, nums: n}) || 1
-      })
+        return countOptions({ list: l, nums: n }) || 1;
+      });
 
-      return multiply(sr)
+      return multiply(sr);
     }
   }
 }
