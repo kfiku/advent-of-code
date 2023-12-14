@@ -214,6 +214,7 @@ function countOptions(spring: Spring) {
 
   const optionsToCheck = countAllQuestionMarks(spring);
 
+
   if (list === getMultipleSigns("?", fullLength)) {
     return optionsToCheck;
   }
@@ -238,6 +239,7 @@ function countOptions(spring: Spring) {
     return partsResult4;
   }
 
+
   //             800_472_431_850
   //               1_855_967_520
   if (optionsToCheck > 1_000_000) {
@@ -248,16 +250,17 @@ function countOptions(spring: Spring) {
   }
 
   const base = nums.map((n) => getMultipleSigns("#", n)).map((d, id) =>
-    id ? "." + d : d
+  id ? "." + d : d
   );
+
+  const minOption = base.join('');
 
   // TRY TO FILL QUICKER
   const filles2: string[] = [];
-  const minOption = base.join('');
   const hashes = sum(nums)
   const dots = fullLength - hashes
-  console.log({minOption, hashes, dots, fullLength});
   fill2(filles2, list, minOption, dots, hashes, "");
+  // console.log("countOptions", {minOption, fullLength, list}, filles2.length);
   return filles2.length;
 
   // LONGER FILL
@@ -274,8 +277,21 @@ function countOptions(spring: Spring) {
   const filles: number[][] = [];
   fill(filles, [], placesToInsert, dotsToPlay, validate);
 
+  console.log("countOptions", {minOption, fullLength, list}, filles.length);
+
   return filles.length;
+
+  // countOptions ??.??. 4
+  // countOptions .?.??.??. 8
+  // countOptions .?.??.??. 8
+  // countOptions .?.??.??. 8
+  // countOptions .?.??.?? 8
+  // 4*8*8*8*8
 }
+
+// 16384
+// 140608
+// .?.??.??.
 
 function fill2(
   arr: string[],
@@ -291,11 +307,11 @@ function fill2(
   txt += fillWith;
 
   if (txt.length === list.length) {
-    if (validateFromStart(txt, minOption)) {
-      console.log("VALID", txt);
+    if (hashes === maxHashes && validateFull(txt, list)) {
+      // console.log("VALID", txt, txt.length);
       arr.push(txt);
     } else {
-      console.log("NOT VALID", txt, list);
+      // console.log("NOT VALID", txt, list);
     }
   } else {
     const nextD = list[txt.length];
@@ -361,25 +377,34 @@ function fill2(
   }
 }
 
+function validateFull(proposition: string, line: string) {
+  for (let i = 0; i < proposition.length; i++) {
+    const dp = proposition[i];
+    const dl = line[i];
+
+    if (dp !== dl && dl !== "?") {
+      return false;
+    }
+  }
+
+  // console.log(proposition, line);
+
+  return true;
+}
+
 function validateFromStart(proposition: string, minOption: string) {
   const trimmedProposition = trimList(proposition);
 
-  if (trimmedProposition.length < minOption.length) {
-    // return true
-  }
   if (trimmedProposition.length === 0) {
-    // console.log('.....');
     return true
   }
-
-  // console.log("PROPO" proposition, trimmedProposition);
 
   for (let i = 0; i < trimmedProposition.length; i++) {
     const dp = trimmedProposition[i];
     const dl = minOption[i];
 
     if (dp !== dl && dl !== "?") {
-      console.log('X. not valid', proposition, trimmedProposition);
+      // console.log('X. not valid', proposition, trimmedProposition);
       return false;
     } else {
       // console.log('valid', trimmedProposition);
