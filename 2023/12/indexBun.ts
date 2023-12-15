@@ -1,21 +1,25 @@
 import {
   factorial,
-  file,
+  lineByLineBun,
   multiply,
-  part,
   printResults,
   sum,
 } from "../utils/utils.ts";
 import { denoUtils } from "../utils/denoUtils.ts";
 
+// const part = +Deno.args[0] || 1;
+// const file = Deno.args[1] || "./input.txt";
+const part = 2
+const file = "./input.txt";
+
 async function run() {
   if (part === 1) {
-    await denoUtils(file, part1);
+    await lineByLineBun(file, part1);
     const result = process1();
 
     printResults(8270, result);
   } else {
-    await denoUtils(file, part2);
+    await lineByLineBun(file, part2);
     const result = process1();
 
     printResults(204640299929836, result);
@@ -45,7 +49,7 @@ function part2(line: string) {
   const nn = n.split(",").map((n) => +n);
 
   const line5 = [l, l, l, l, l].join("?") + " " +
-    [nn, nn, nn, nn, nn].flat().join(",");
+  [nn, nn, nn, nn, nn].flat().join(",");
   const { list, nums } = minimize(line5);
 
   const spring = {
@@ -60,6 +64,7 @@ function process1() {
   const counts: number[] = [];
 
   for (let i = 0; i < springs.length; i++) {
+    // console.log('STEP', i, springs[i]);
     const opts = countOptions(springs[i]);
 
     counts.push(opts || 1);
