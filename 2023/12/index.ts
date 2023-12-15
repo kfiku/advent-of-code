@@ -4,6 +4,7 @@ import {
   multiply,
   printResults,
   sum,
+  zip,
 } from "../utils/utils.ts";
 
 // ??????????? 3,2,2 => l:12, m:9, miejsc do wstawienia: 4
@@ -24,6 +25,7 @@ async function run() {
     await lineByLine(file, part2);
     const result = process1();
     printResults(525152, result);
+    // printResults(16384, result);
   }
 }
 
@@ -145,19 +147,13 @@ function process1() {
 
   for (let i = 0; i < springs.length; i++) {
     const spring = springs[i];
-    const opts = countOptions(spring);
-    console.log(
-      "STEP:",
-      i,
-      opts,
-      spring.list + " " + spring.nums.join(","),
-      // "; org:",
-      // lines[i],
-    );
 
-    if (opts === 0) {
-      console.log("ERROR", springs[i], lines[i]);
+    if (i !== 1) {
+      // continue
     }
+
+    const opts = countOptions(spring);
+    console.log("STEP:", i, opts, spring.list + " " + spring.nums.join(","));
 
     counts.push(opts || 1);
   }
@@ -165,105 +161,41 @@ function process1() {
   return counts;
 }
 
-const reg1 = /\.+/g;
-const reg2 = /^\.+/g;
-const reg3 = /\.+$/g;
-function trimList(list: string) {
-  return list
-    .replace(reg1, ".")
-    .replace(reg2, "")
-    .replace(reg3, "")
-  ;
-}
-
-function fill(
-  arr: number[][],
-  before: number[],
-  len: number,
-  fillWith: number,
-  validate: (fillArray: number[]) => boolean,
-) {
-  if (len <= 1) {
-    const nextBefore = [...before, fillWith];
-    if (validate(nextBefore)) {
-      arr.push(nextBefore);
-    }
-  } else {
-    const nexLen = len - 1;
-
-    let l = fillWith;
-    while (l >= 0) {
-      const nextBefore = [...before, l];
-      fill(arr, nextBefore, nexLen, fillWith - l, validate);
-      l--;
-    }
-  }
-}
-
 function countOptions(spring: Spring) {
   const { list, nums } = spring;
+
+  const opti = preOpti(spring);
+  if (opti) {
+    return opti;
+  }
+
+  //* // TRY TO FILL QUICKER 3.0
+  const filles3: string[] = [];
+  const r = fill3(0, list, nums);
+
+  return r;
+  //*/
+
+  /* // TRY TO FILL QUICKER
+  const base = nums.map((n) => getMultipleSigns("#", n)).map((d, id) =>
+    id ? "." + d : d
+  );
   const fullLength = list.length;
   const between = nums.length - 1;
   const minLength = sum(nums) + between;
   const placesToInsert = between + 2;
   const dotsToPlay = fullLength - minLength;
 
-  if (fullLength === minLength) {
-    return 1;
-  }
-
-  const optionsToCheck = countAllQuestionMarks(spring);
-
-
-  if (list === getMultipleSigns("?", fullLength)) {
-    return optionsToCheck;
-  }
-
-  const partsResult = countByPartsIfPossible(spring);
-  if (partsResult) {
-    return partsResult;
-  }
-
-  const partsResult2 = countByPartsIfPossible2(spring);
-  if (partsResult2) {
-    return partsResult2;
-  }
-
-  const partsResult3 = countByPartsIfPossible3(spring);
-  if (partsResult3) {
-    return partsResult3;
-  }
-
-  const partsResult4 = countByPartsIfPossible4(spring);
-  if (partsResult4) {
-    return partsResult4;
-  }
-
-
-  //             800_472_431_850
-  //               1_855_967_520
-  if (optionsToCheck > 1_000_000) {
-    const optionsToCheck2 = countAllQuestionMarks2(spring);
-    console.log("TO MANY OPTIONS TO CHECK:", optionsToCheck, optionsToCheck2);
-    // Deno.exit()
-    // return 0
-  }
-
-  const base = nums.map((n) => getMultipleSigns("#", n)).map((d, id) =>
-  id ? "." + d : d
-  );
-
   const minOption = base.join('');
-
-  // TRY TO FILL QUICKER
   const filles2: string[] = [];
   const hashes = sum(nums)
   const dots = fullLength - hashes
   fill2(filles2, list, minOption, dots, hashes, "");
   // console.log("countOptions", {minOption, fullLength, list}, filles2.length);
   return filles2.length;
+  //*/
 
-  // LONGER FILL
+  /* // LONGER FILL
   const validate = (fillArray: number[]) => {
     const fill = fillArray.map((f) => getMultipleSigns(".", f));
     const a = zip(fill, base);
@@ -280,18 +212,57 @@ function countOptions(spring: Spring) {
   console.log("countOptions", {minOption, fullLength, list}, filles.length);
 
   return filles.length;
-
-  // countOptions ??.??. 4
-  // countOptions .?.??.??. 8
-  // countOptions .?.??.??. 8
-  // countOptions .?.??.??. 8
-  // countOptions .?.??.?? 8
-  // 4*8*8*8*8
+  //*/
 }
 
-// 16384
-// 140608
-// .?.??.??.
+function fill3(
+  count: number,
+  list: string,
+  nums: number[],
+  hashes = 0,
+): number {
+  const first = list[0];
+  const nextList = list.slice(1);
+
+  switch (first) {
+    case ".": {
+      const firstGroup = nums[0];
+
+      if (hashes === 0) {
+        return fill3(count, nextList, nums, hashes);
+      } else if (hashes === firstGroup) {
+        return fill3(count, nextList, nums.slice(1), 0);
+      }
+
+      return 0;
+    }
+
+    case "#": {
+      return fill3(count, nextList, nums, hashes + 1);
+    }
+
+    case "?": {
+      const withDot = "." + nextList;
+      const withDotSum = fill3(count, withDot, nums, hashes);
+
+      const withHash = "#" + nextList;
+      const withHashSum = fill3(count, withHash, nums, hashes);
+
+      return withDotSum + withHashSum;
+    }
+
+    default: {
+      const finish = list === "" && nums.length === 0 && hashes === 0;
+      const hashFinish = list === "" && nums.length === 1 && nums[0] === hashes;
+
+      if (finish || hashFinish) {
+        return 1;
+      }
+
+      return 0;
+    }
+  }
+}
 
 function fill2(
   arr: string[],
@@ -396,7 +367,7 @@ function validateFromStart(proposition: string, minOption: string) {
   const trimmedProposition = trimList(proposition);
 
   if (trimmedProposition.length === 0) {
-    return true
+    return true;
   }
 
   for (let i = 0; i < trimmedProposition.length; i++) {
@@ -442,20 +413,40 @@ function getMultipleSigns(sign: string, times: number) {
   return signs;
 }
 
-function zip(arr1: any[], arr2: any[]) {
-  const arr = [];
-  for (let i = 0; i < arr1.length; i++) {
-    const e1 = arr1[i];
-    const e2 = arr2[i];
+function preOpti(spring: Spring) {
+  const { list, nums } = spring;
+  const between = nums.length - 1;
+  const fullLength = list.length;
+  const minLength = sum(nums) + between;
 
-    arr.push(e1);
-
-    if (e2) {
-      arr.push(e2);
-    }
+  if (fullLength === minLength) {
+    return 1;
   }
 
-  return arr;
+  if (list === getMultipleSigns("?", fullLength)) {
+    return countAllQuestionMarks(spring);
+  }
+
+  // SPLIT OPTIONS
+  const partsResult = countByPartsIfPossible(spring);
+  if (partsResult) {
+    return partsResult;
+  }
+
+  const partsResult2 = countByPartsIfPossible2(spring);
+  if (partsResult2) {
+    return partsResult2;
+  }
+
+  const partsResult3 = countByPartsIfPossible3(spring);
+  if (partsResult3) {
+    return partsResult3;
+  }
+
+  const partsResult4 = countByPartsIfPossible4(spring);
+  if (partsResult4) {
+    return partsResult4;
+  }
 }
 
 function countByPartsIfPossible({ list, nums }: Spring) {
@@ -601,34 +592,38 @@ function countAllQuestionMarks({ list, nums }: Spring) {
   return Math.round(up / down);
 }
 
-function countAllQuestionMarks2({ list, nums }: Spring) {
-  const ll = list.replace(/[.#]/g, "").length;
-  // const ll = list.length;
-  // const fullLength = l.length;
-  const between = nums.length - 1;
-  const minLength = sum(nums || []) + between;
-  const placesToInsert = between + 2;
-  const diff = ll - minLength;
+const reg1 = /\.+/g;
+const reg2 = /^\.+/g;
+const reg3 = /\.+$/g;
+function trimList(list: string) {
+  return list
+    .replace(reg1, ".")
+    .replace(reg2, "")
+    .replace(reg3, "");
+}
 
-  const upBase = placesToInsert + diff - 1;
-  const up = factorial(upBase);
-  const down = factorial(diff) * factorial(upBase - diff);
+function fill(
+  arr: number[][],
+  before: number[],
+  len: number,
+  fillWith: number,
+  validate: (fillArray: number[]) => boolean,
+) {
+  if (len <= 1) {
+    const nextBefore = [...before, fillWith];
+    if (validate(nextBefore)) {
+      arr.push(nextBefore);
+    }
+  } else {
+    const nexLen = len - 1;
 
-  // console.log(list + " " + nums.join(',') + " => l:" + fullLength + " m:" + minLength + " miejsc do wstawienia:" + placesToInsert)
-  // console.log(
-  //   "(" + placesToInsert + " + " + diff + " - " + 1 + ")!" +
-  //   "\n" +
-  //   "----------------" +
-  //   "\n" +
-  //   "(" + diff + "!" + " * " + "(" + placesToInsert + " + " + diff + " - " + 1  + " - " + diff + ")!" +  ")",
-  // );
-
-  // ?????????? 3,2,2 => l:12, m:9, miejsc do wstawienia: 4
-  // (4 + 3 - 1)!
-  // ------------------
-  // 3! * ((4 + 3 - 1) - 3)!
-
-  return Math.round(up / down);
+    let l = fillWith;
+    while (l >= 0) {
+      const nextBefore = [...before, l];
+      fill(arr, nextBefore, nexLen, fillWith - l, validate);
+      l--;
+    }
+  }
 }
 
 run();
