@@ -1,9 +1,6 @@
 
 console.time("process");
 
-export const part = +Deno.args[0] || 1;
-export const file = Deno.args[1] || "./input.txt";
-
 export function factorial(num: number) {
   if (num < 0) {
     return Infinity;

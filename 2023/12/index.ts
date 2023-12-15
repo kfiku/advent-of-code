@@ -1,21 +1,19 @@
 import {
   factorial,
-  file,
   multiply,
-  part,
   printResults,
   sum,
 } from "../utils/utils.ts";
-import { denoUtils } from "../utils/denoUtils.ts";
+import { readFileLineByLine, file, part } from "../utils/denoUtils.ts";
 
 async function run() {
   if (part === 1) {
-    await denoUtils(file, part1);
+    await readFileLineByLine(file, part1);
     const result = process1();
 
     printResults(8270, result);
   } else {
-    await denoUtils(file, part2);
+    await readFileLineByLine(file, part2);
     const result = process1();
 
     printResults(204640299929836, result);

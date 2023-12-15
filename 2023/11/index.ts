@@ -1,17 +1,17 @@
 import { printResults } from "../utils/utils.ts";
-import { denoUtils } from "../utils/denoUtils.ts";
+import { readFileLineByLine } from "../utils/denoUtils.ts";
 
 const part = +Deno.args[0] || 1;
 let expandRate = 1;
 
 async function run() {
   if (part === 1) {
-    await denoUtils("./input.txt", part1);
+    await readFileLineByLine("./input.txt", part1);
     const result = process1();
     printResults(374, result);
   } else {
     expandRate = 1_000_000 - 1;
-    await denoUtils("./input.txt", part1);
+    await readFileLineByLine("./input.txt", part1);
     const result = process1();
     printResults(648458253817, result);
   }
