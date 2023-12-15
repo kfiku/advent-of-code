@@ -169,6 +169,9 @@ function countOptions(spring: Spring) {
     return opti;
   }
 
+  // 204626466081819
+  // 204640299929836
+
   //* // TRY TO FILL QUICKER 3.0
   const filles3: string[] = [];
   const r = fill3(0, list, nums);
@@ -215,14 +218,23 @@ function countOptions(spring: Spring) {
   //*/
 }
 
+const fill3Cache: Record<string, number> = {}
+
 function fill3(
   count: number,
   list: string,
   nums: number[],
   hashes = 0,
 ): number {
+  const cacheKey = list + " " + nums.join(',') + " " + hashes
+
+  if(fill3Cache[cacheKey] !== undefined) {
+    return count + fill3Cache[cacheKey]
+  }
+
   const first = list[0];
   const nextList = list.slice(1);
+  let newCount = 0;
 
   switch (first) {
     case ".": {
@@ -233,9 +245,7 @@ function fill3(
       } else if (hashes === firstGroup) {
         return fill3(count, nextList, nums.slice(1), 0);
       }
-
-      return 0;
-    }
+    } break
 
     case "#": {
       return fill3(count, nextList, nums, hashes + 1);
@@ -248,20 +258,22 @@ function fill3(
       const withHash = "#" + nextList;
       const withHashSum = fill3(count, withHash, nums, hashes);
 
-      return withDotSum + withHashSum;
-    }
+      newCount = withDotSum + withHashSum;
+    } break
 
     default: {
       const finish = list === "" && nums.length === 0 && hashes === 0;
       const hashFinish = list === "" && nums.length === 1 && nums[0] === hashes;
 
       if (finish || hashFinish) {
-        return 1;
+        newCount = 1;
       }
-
-      return 0;
-    }
+    } break
   }
+
+  fill3Cache[cacheKey] = newCount
+
+  return newCount
 }
 
 function fill2(
@@ -427,26 +439,27 @@ function preOpti(spring: Spring) {
     return countAllQuestionMarks(spring);
   }
 
-  // SPLIT OPTIONS
-  const partsResult = countByPartsIfPossible(spring);
-  if (partsResult) {
-    return partsResult;
-  }
 
-  const partsResult2 = countByPartsIfPossible2(spring);
-  if (partsResult2) {
-    return partsResult2;
-  }
+  // // SPLIT OPTIONS
+  // const partsResult = countByPartsIfPossible(spring);
+  // if (partsResult) {
+  //   return partsResult;
+  // }
 
-  const partsResult3 = countByPartsIfPossible3(spring);
-  if (partsResult3) {
-    return partsResult3;
-  }
+  // const partsResult2 = countByPartsIfPossible2(spring);
+  // if (partsResult2) {
+  //   return partsResult2;
+  // }
 
-  const partsResult4 = countByPartsIfPossible4(spring);
-  if (partsResult4) {
-    return partsResult4;
-  }
+  // const partsResult3 = countByPartsIfPossible3(spring);
+  // if (partsResult3) {
+  //   return partsResult3;
+  // }
+
+  // const partsResult4 = countByPartsIfPossible4(spring);
+  // if (partsResult4) {
+  //   return partsResult4;
+  // }
 }
 
 function countByPartsIfPossible({ list, nums }: Spring) {
