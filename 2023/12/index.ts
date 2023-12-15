@@ -1,13 +1,12 @@
 import {
   factorial,
+  file,
   lineByLine,
   multiply,
+  part,
   printResults,
   sum,
 } from "../utils/utils.ts";
-
-const part = +Deno.args[0] || 1;
-const file = Deno.args[1] || "./input.txt";
 
 async function run() {
   if (part === 1) {
