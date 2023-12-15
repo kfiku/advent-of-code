@@ -74,3 +74,19 @@ export function lcmOfArray(arr: number[]) {
   }
   return currentLcm;
 }
+
+export function zip(arr1: any[], arr2: any[]) {
+  const arr = [];
+  for (let i = 0; i < arr1.length; i++) {
+    const e1 = arr1[i];
+    const e2 = arr2[i];
+
+    arr.push(e1);
+
+    if (e2) {
+      arr.push(e2);
+    }
+  }
+
+  return arr;
+}
