@@ -1,4 +1,4 @@
-import { lineByLine, printResults } from "../utils/utils.ts";
+import { lineByLineDeno, printResults } from "../utils/utils.ts";
 
 const numbers: number[] = [];
 const part = +Deno.args[0] || 1;
@@ -7,11 +7,11 @@ let cards = 0;
 
 async function run() {
   if (part === 1) {
-    await lineByLine("./input.txt", part1);
+    await lineByLineDeno("./input.txt", part1);
 
     printResults(13, numbers);
   } else {
-    await lineByLine("./input.txt", part2);
+    await lineByLineDeno("./input.txt", part2);
 
     printResults(30, [cards]);
   }

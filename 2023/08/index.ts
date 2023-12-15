@@ -1,6 +1,6 @@
 import {
   lcmOfArray,
-  lineByLine,
+  lineByLineDeno,
   multiply,
   printResults,
   sum,
@@ -10,11 +10,11 @@ const part = +Deno.args[0] || 1;
 
 async function run() {
   if (part === 1) {
-    await lineByLine("./input.txt", part1);
+    await lineByLineDeno("./input.txt", part1);
     const result = process();
     printResults(18727, [result]);
   } else {
-    await lineByLine("./input.txt", part1);
+    await lineByLineDeno("./input.txt", part1);
     const result = process2();
 
     printResults(18024643846273, [result]);

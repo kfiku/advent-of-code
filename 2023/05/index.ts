@@ -1,9 +1,9 @@
-import { lineByLine, printResults } from "../utils/utils.ts";
+import { lineByLineDeno, printResults } from "../utils/utils.ts";
 
 // const part = +Deno.args[0] || 1;
 
 async function run() {
-  await lineByLine("./input.txt", part1);
+  await lineByLineDeno("./input.txt", part1);
 
   const result = process();
 

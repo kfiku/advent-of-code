@@ -1,7 +1,7 @@
 import {
   factorial,
   file,
-  lineByLine,
+  lineByLineDeno,
   multiply,
   part,
   printResults,
@@ -10,12 +10,12 @@ import {
 
 async function run() {
   if (part === 1) {
-    await lineByLine(file, part1);
+    await lineByLineDeno(file, part1);
     const result = process1();
 
     printResults(8270, result);
   } else {
-    await lineByLine(file, part2);
+    await lineByLineDeno(file, part2);
     const result = process1();
 
     printResults(204640299929836, result);

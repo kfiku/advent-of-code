@@ -1,15 +1,15 @@
-import { lineByLine, multiply, printResults } from "../utils/utils.ts";
+import { lineByLineDeno, multiply, printResults } from "../utils/utils.ts";
 
 const part = +Deno.args[0] || 1;
 
 async function run() {
   if (part === 1) {
-    await lineByLine("./input.txt", part2);
+    await lineByLineDeno("./input.txt", part2);
     const result = process();
 
     printResults(114400, [result]);
   } else {
-    await lineByLine("./input.txt", part1);
+    await lineByLineDeno("./input.txt", part1);
     const result = process();
 
     printResults(21039729, [result]);

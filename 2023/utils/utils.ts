@@ -30,7 +30,7 @@ export function printResults(expected: number, numbers: number[]) {
   console.timeEnd("process");
 }
 
-export async function lineByLine(
+export async function lineByLineDeno(
   file: string,
   callback: (line: string) => void,
 ) {
