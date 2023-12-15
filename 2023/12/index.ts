@@ -4,7 +4,7 @@ import {
   printResults,
   sum,
 } from "../utils/utils.ts";
-import { readFileLineByLine, file, part } from "../utils/denoUtils.ts";
+import { readFileLineByLine, file, part } from "../utils/bunUtils.ts";
 
 async function run() {
   if (part === 1) {
