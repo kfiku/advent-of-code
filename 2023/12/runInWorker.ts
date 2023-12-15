@@ -1,7 +1,5 @@
-import { Spring } from "./index.ts";
-
 const workerURL = new URL("worker.ts", import.meta.url).href;
-const maxWorkers = 8 * 4;
+const maxWorkers = 8 * 2;
 const workers = [
   { id: 1, busy: false, worker: new Worker(workerURL, { type: "module" }) },
 ];
@@ -15,11 +13,11 @@ interface Task {
 let workQueue: Task[] = [];
 let lastTaskId = 0;
 
-export function runInWorker(spring: Spring) {
+export function runInWorker(data: any) {
   return new Promise((resolve) => {
     workQueue.push({
       key: lastTaskId++,
-      data: spring,
+      data,
       callback: resolve,
       status: "ready",
     });
