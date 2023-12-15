@@ -5,7 +5,7 @@ export const file = Deno.args[1] || "./input.txt";
 
 export async function readFileLineByLine(
   file: string,
-  callback: (line: string) => void
+  callback: (line: string) => void,
 ) {
   const f = await Deno.open(file);
 

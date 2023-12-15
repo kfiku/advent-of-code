@@ -1,9 +1,4 @@
-import {
-  lcmOfArray,
-  multiply,
-  printResults,
-  sum,
-} from "../utils/utils.ts";
+import { lcmOfArray, multiply, printResults, sum } from "../utils/utils.ts";
 import { readFileLineByLine } from "../utils/denoUtils.ts";
 
 const part = +Deno.args[0] || 1;

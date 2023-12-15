@@ -1,4 +1,3 @@
-
 console.time("process");
 
 export function factorial(num: number) {
