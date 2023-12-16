@@ -9,13 +9,14 @@ async function run() {
     printResults(46, result);
   } else {
     await readFileLineByLine(file, part1);
-    const result = process1();
+    const result = process2();
     printResults(145, result);
   }
 }
 
 const maze: string[][] = []
-const visited: number[][] = []
+let visited: number[][] = []
+const visitedBase: number[][] = []
 type Point = [number, number];
 type Modifier = (from: Point, position: Point) => Point[]
 const modifiers: Record<string, Modifier> = {
@@ -34,11 +35,13 @@ function part1(line: string) {
   if(!maze[y]) {
     maze[y] = []
     visited[y] = []
+    visitedBase[y] = []
   }
 
   for (let x = 0; x < ll.length; x++) {
     maze[y][x] = ll[x]
     visited[y][x] = 0
+    visitedBase[y][x] = 0
   }
 }
 
@@ -47,6 +50,65 @@ function process1() {
 
   // console.log(visited.map(l => l.map(d => d ? "#" : '.').join('')).join('\n'));
   return visited.flat().map(v => v ? 1 : 0);
+}
+
+let maxVisited = 0
+function process2() {
+  goDown()
+  goUp()
+  goRight()
+  goLeft()
+
+  // console.log(visited.map(l => l.map(d => d ? "#" : '.').join('')).join('\n'));
+  return [maxVisited]
+}
+
+function reset() {
+  visited = JSON.parse(JSON.stringify(visitedBase));
+}
+
+function goDown() {
+  const y = 0
+  for (let x = 0; x < maze[0].length; x++) {
+    reset();
+    walk([0, 1], [x, y])
+    const count = sum(visited.flat().map(v => v ? 1 : 0))
+
+    maxVisited = Math.max(count, maxVisited);
+  }
+}
+
+function goUp() {
+  const y = maze.length - 1
+  for (let x = 0; x < maze[0].length; x++) {
+    reset();
+    walk([0, -1], [x, y])
+    const count = sum(visited.flat().map(v => v ? 1 : 0))
+
+    maxVisited = Math.max(count, maxVisited);
+  }
+}
+
+function goRight() {
+  const x = 0
+  for (let y = 0; y < maze.length; y++) {
+    reset();
+    walk([1, 0], [x, y])
+    const count = sum(visited.flat().map(v => v ? 1 : 0))
+
+    maxVisited = Math.max(count, maxVisited);
+  }
+}
+
+function goLeft() {
+  const x = maze[0].length - 1
+  for (let y = 0; y < maze.length; y++) {
+    reset();
+    walk([-1, 0], [x, y])
+    const count = sum(visited.flat().map(v => v ? 1 : 0))
+
+    maxVisited = Math.max(count, maxVisited);
+  }
 }
 
 let i = 0
