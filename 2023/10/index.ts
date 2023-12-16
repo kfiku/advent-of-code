@@ -1,16 +1,15 @@
 import { printResults } from "../utils/utils.ts";
-import { readFileLineByLine } from "../utils/denoUtils.ts";
-
-const part = +Deno.args[0] || 1;
+import { file, part, readFileLineByLine } from "../utils/bunUtils.ts";
 
 async function run() {
   if (part === 1) {
-    await readFileLineByLine("./input.txt", part1);
+    await readFileLineByLine(file, part1);
     const result = process1();
+
     printResults(6903, [result]);
   } else {
     console.clear();
-    await readFileLineByLine("./input.txt", part2);
+    await readFileLineByLine(file, part1);
     const result = process2();
 
     printResults(4, [result]);
@@ -18,15 +17,16 @@ async function run() {
 }
 
 // directions from left to right and from top to bottom
-const directions = {
-  "-": [[-1, 0], [1, 0]],
-  "7": [[-1, 0], [0, 1]],
-  "F": [[0, 1], [1, 0]],
-  "J": [[0, -1], [-1, 0]],
-  "L": [[0, -1], [1, 0]],
-  "S": [[0, 0], [0, 0]],
-  "|": [[0, 1], [0, -1]],
-  ".": [[], []],
+type Dir = [number[], number[], { left: number[][], right: number[][]}]
+const directions: Record<string, Dir> = {
+  "-": [[-1, 0], [1, 0], { left: [[0, -1]], right: [[0, 1]]}],
+  "7": [[-1, 0], [0, 1], { left: [[0, -1], [1, 0]], right: []}],
+  "F": [[0, 1], [1, 0], { left: [[-1, 0], [0, -1]], right: []}],
+  "J": [[0, -1], [-1, 0], { left: [[1, 0], [0, -1]], right: []}],
+  "L": [[0, -1], [1, 0], { left: [], right: [[-1, 0], [0, -1]]}],
+  "S": [[0, 0], [0, 0], { left: [], right: []}],
+  "|": [[0, 1], [0, -1], { left: [[-1, 0]], right: [[1, 0]]}],
+  ".": [[], [], { left: [], right: []}],
 };
 
 const symbolDict = {
@@ -44,6 +44,75 @@ type Sym = keyof typeof directions;
 const startSymbol = "S";
 let currentPosition = [0, 0];
 const maze: string[] = [];
+
+function part2(line: string) {
+  maze.push(line);
+
+  const y = dots.length;
+  const dotsLine = line.split("").map((d, id) => {
+    if (d === ".") {
+      return [id, y];
+    }
+  }).filter(Boolean) as [number, number][];
+
+  dots.push(dotsLine);
+}
+
+const dotsOnSide = {
+  left: [],
+  right: [],
+}
+
+function process2() {
+  let i = 0;
+  let direction = getDirection(maze, currentPosition);
+  console.log(maze);
+
+  while (i < 200000) {
+    const nextDir = walkMaze(maze, direction);
+
+    if (!nextDir) {
+      console.log("ERROR");
+      return 0;
+    }
+
+    const left = matchDir(reverseMove(nextDir.from), [nextDir.direction[0]])
+    const [x, y] = nextDir.pos
+    const sides = nextDir.direction[2]
+    const dotsOnLeft = sides.left.map(([ax, ay]) => {
+      const nextPos = [x + ax, y + ay];
+      const p = getDirection(maze, nextPos)
+      if (p.symbol === ".") {
+        return [p.symbol, p.pos]
+      }
+    }).filter(Boolean)
+
+    const dotsOnRight = sides.right.map(([ax, ay]) => {
+      const nextPos = [x + ax, y + ay];
+      const p = getDirection(maze, nextPos)
+      if (p.symbol === ".") {
+        return [p.symbol, p.pos]
+      }
+    }).filter(Boolean)
+
+    console.log(dotsOnLeft, dotsOnRight);
+
+    if (left) {
+
+    }
+
+    direction = nextDir;
+
+    i++;
+
+    if (direction.symbol === startSymbol) {
+      console.log('end of maze');
+      return i / 2;
+    }
+  }
+
+  return i;
+}
 
 function part1(line: string) {
   const startPosition = line.indexOf(startSymbol);
@@ -95,7 +164,7 @@ function walkMaze(maze: string[], direction: Direction) {
   const nextDir = getNextPos(maze, direction);
 
   if (isPointOnABorder(nextDir.pos)) {
-    console.log("BORDER", nextDir);
+    // console.log("BORDER", nextDir);
   }
 
   return nextDir;
@@ -182,44 +251,8 @@ const dots: [number, number][][] = [];
 let flatDots: [number, number][] = [];
 const borderX = [0];
 const borderY = [0];
-function part2(line: string) {
-  maze.push(line);
-
-  const y = dots.length;
-  const dotsLine = line.split("").map((d, id) => {
-    if (d === ".") {
-      return [id, y];
-    }
-  }).filter(Boolean) as [number, number][];
-
-  dots.push(dotsLine);
-}
 
 const groupedDots: [number, number][][] = [];
-
-function process2() {
-  borderX.push(maze[0].length - 1);
-  borderY.push(maze.length - 1);
-
-  flatDots = dots.flat();
-
-  const group = walk(maze, flatDots[0], [0, 0]);
-  console.log("group", group, group.length, 49);
-
-  // while (flatDots.length > 1) {
-  //   const dot = flatDots.splice(0, 1)[0]
-  //   addToGroup(dot, groupedDots)
-
-  //   if (flatDots.length === 0) {
-  //     return
-  //   }
-  // }
-
-  // console.log('end of dots');
-  // console.log(groupedDots);
-
-  return 0;
-}
 
 type Point = number[];
 
