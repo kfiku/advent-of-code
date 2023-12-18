@@ -14,6 +14,42 @@ async function run() {
   }
 }
 
+function part1(line: string) {
+  const [direction, count, color] = line.split(' ')
+
+  const step: Step = {
+    direction,
+    count: +count,
+    color
+  }
+
+  steps.push(step)
+}
+
+function process1() {
+  const sides = {left: [], right: []}
+  const res = walk({ modifier, steps, point: [0, 0], sides, visitvisiteded: [[0, 0]] })
+
+  const maze = getMazeFromVisitedAndSides(res[0].visited!, res[0].sides!);
+
+  const mazeResult = maze.map(l => l.map(l => l != ' ' ? 1 : 0)).flat()
+
+  return mazeResult
+}
+
+function walk(options: WalkOptions): WalkOptions[] {
+  const { modifier } = options;
+
+  const nextOptions = modifier(options)
+  const nextMoves = nextOptions.filter(option => !option.isLast)
+
+  if (nextMoves && nextMoves.length) {
+    return nextMoves.map(option => walk(option)).flat()
+  }
+
+  return nextOptions
+}
+
 type Step = {
   direction: string;
   count: number;
@@ -80,7 +116,6 @@ function modifier(options: WalkOptions) {
     }
   }
 
-
   const next: WalkOptions = {
     ...options,
     point: nextPoint,
@@ -92,42 +127,6 @@ function modifier(options: WalkOptions) {
   }
 
   return [next]
-}
-
-function part1(line: string) {
-  const [direction, count, color] = line.split(' ')
-
-  const step: Step = {
-    direction,
-    count: +count,
-    color
-  }
-
-  steps.push(step)
-}
-
-function process1() {
-  const sides = {left: [], right: []}
-  const res = walk({ modifier, steps, point: [0, 0], sides, visitvisiteded: [[0, 0]] })
-
-  const maze = getMazeFromVisitedAndSides(res[0].visited!, res[0].sides!);
-
-  const mazeResult = maze.map(l => l.map(l => l != ' ' ? 1 : 0)).flat()
-
-  return mazeResult
-}
-
-function walk(options: WalkOptions): WalkOptions[] {
-  const { modifier } = options;
-
-  const nextOptions = modifier(options)
-  const nextMoves = nextOptions.filter(option => !option.isLast)
-
-  if (nextMoves && nextMoves.length) {
-    return nextMoves.map(option => walk(option)).flat()
-  }
-
-  return nextOptions
 }
 
 
