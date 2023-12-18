@@ -1,4 +1,4 @@
-const workerURL = new URL("worker.ts", import.meta.url).href;
+const workerURL = "./worker.ts";
 const maxWorkers = 8 * 2;
 const workers = [
   { id: 1, busy: false, worker: new Worker(workerURL, { type: "module" }) },

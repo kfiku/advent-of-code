@@ -1,6 +1,6 @@
 import { printResults } from "../utils/utils.ts";
 import { file, part, readFileLineByLine } from "../utils/bunUtils.ts";
-import { runInWorker } from "./runInWorker.ts";
+import { runInWorker } from "../utils/runInWorker.ts";
 
 async function run() {
   if (part === 1) {

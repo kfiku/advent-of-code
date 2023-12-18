@@ -1,3 +1,4 @@
+console.clear();
 console.time("process");
 
 export function factorial(num: number) {
@@ -13,8 +14,8 @@ export function factorial(num: number) {
   return fact;
 }
 
-export function printResults(expected: number, numbers: number[]) {
-  const result = sum(numbers);
+export function printResults(expected: number, numbers: number | number[]) {
+  const result = Array.isArray(numbers) ? sum(numbers) : numbers;
 
   if (expected === result) {
     console.log("OK", result);
