@@ -1,6 +1,22 @@
-import { Point, maze, minHeat, cache, endPoint, isToFarBackwards, matchDir, matchMove, moves } from "./index.ts";
+import {
+  cache,
+  endPoint,
+  isToFarBackwards,
+  matchDir,
+  matchMove,
+  maze,
+  minHeat,
+  moves,
+  Point,
+} from "./index.ts";
 
-export function walk(from: Point, p: Point, heat = 0, movesForwardInRow = 1, visited: Point[] = []): number {
+export function walk(
+  from: Point,
+  p: Point,
+  heat = 0,
+  movesForwardInRow = 1,
+  visited: Point[] = [],
+): number {
   const [x, y] = p;
   const [fx, fy] = from;
   const pHeat = maze[y]?.[x];
@@ -10,7 +26,7 @@ export function walk(from: Point, p: Point, heat = 0, movesForwardInRow = 1, vis
   const cacheValue = cache.get(cacheKey);
 
   if (cacheValue) {
-    console.log('FROM CACHE:', p, cacheValue);
+    console.log("FROM CACHE:", p, cacheValue);
     // return cacheValue + nextHeat
   }
 
@@ -29,7 +45,7 @@ export function walk(from: Point, p: Point, heat = 0, movesForwardInRow = 1, vis
   }
 
   if (x === endPoint[0] && y === endPoint[1]) {
-    console.log('HEAT:', nextHeat);
+    console.log("HEAT:", nextHeat);
     minHeat = nextHeat;
 
     return nextHeat;
@@ -58,7 +74,13 @@ export function walk(from: Point, p: Point, heat = 0, movesForwardInRow = 1, vis
     const next: Point = [x + fx, y + fy];
 
     if (maze[next[1]]?.[next[0]]) {
-      const result = walk(from, next, nextHeat, movesForwardInRow + 1, nextVisited);
+      const result = walk(
+        from,
+        next,
+        nextHeat,
+        movesForwardInRow + 1,
+        nextVisited,
+      );
       results.push(result);
     }
   }
@@ -107,7 +129,7 @@ export function walk(from: Point, p: Point, heat = 0, movesForwardInRow = 1, vis
 
   if (min < 9999) {
     cache.set(cacheKey, min - heat - pHeat);
-    console.log('SET CACHE:', p, min - heat - pHeat);
+    console.log("SET CACHE:", p, min - heat - pHeat);
   }
 
   return min;

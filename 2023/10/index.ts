@@ -17,16 +17,16 @@ async function run() {
 }
 
 // directions from left to right and from top to bottom
-type Dir = [number[], number[], { left: number[][], right: number[][]}]
+type Dir = [number[], number[], { left: number[][]; right: number[][] }];
 const directions: Record<string, Dir> = {
-  "-": [[-1, 0], [1, 0], { left: [[0, -1]], right: [[0, 1]]}],
-  "7": [[-1, 0], [0, 1], { left: [[0, -1], [1, 0]], right: []}],
-  "F": [[0, 1], [1, 0], { left: [[-1, 0], [0, -1]], right: []}],
-  "J": [[0, -1], [-1, 0], { left: [[1, 0], [0, -1]], right: []}],
-  "L": [[0, -1], [1, 0], { left: [], right: [[-1, 0], [0, -1]]}],
-  "S": [[0, 0], [0, 0], { left: [], right: []}],
-  "|": [[0, 1], [0, -1], { left: [[-1, 0]], right: [[1, 0]]}],
-  ".": [[], [], { left: [], right: []}],
+  "-": [[-1, 0], [1, 0], { left: [[0, -1]], right: [[0, 1]] }],
+  "7": [[-1, 0], [0, 1], { left: [[0, -1], [1, 0]], right: [] }],
+  "F": [[0, 1], [1, 0], { left: [[-1, 0], [0, -1]], right: [] }],
+  "J": [[0, -1], [-1, 0], { left: [[1, 0], [0, -1]], right: [] }],
+  "L": [[0, -1], [1, 0], { left: [], right: [[-1, 0], [0, -1]] }],
+  "S": [[0, 0], [0, 0], { left: [], right: [] }],
+  "|": [[0, 1], [0, -1], { left: [[-1, 0]], right: [[1, 0]] }],
+  ".": [[], [], { left: [], right: [] }],
 };
 
 const symbolDict = {
@@ -61,7 +61,7 @@ function part2(line: string) {
 const dotsOnSide = {
   left: [],
   right: [],
-}
+};
 
 function process2() {
   let i = 0;
@@ -76,29 +76,28 @@ function process2() {
       return 0;
     }
 
-    const left = matchDir(reverseMove(nextDir.from), [nextDir.direction[0]])
-    const [x, y] = nextDir.pos
-    const sides = nextDir.direction[2]
+    const left = matchDir(reverseMove(nextDir.from), [nextDir.direction[0]]);
+    const [x, y] = nextDir.pos;
+    const sides = nextDir.direction[2];
     const dotsOnLeft = sides.left.map(([ax, ay]) => {
       const nextPos = [x + ax, y + ay];
-      const p = getDirection(maze, nextPos)
+      const p = getDirection(maze, nextPos);
       if (p.symbol === ".") {
-        return [p.symbol, p.pos]
+        return [p.symbol, p.pos];
       }
-    }).filter(Boolean)
+    }).filter(Boolean);
 
     const dotsOnRight = sides.right.map(([ax, ay]) => {
       const nextPos = [x + ax, y + ay];
-      const p = getDirection(maze, nextPos)
+      const p = getDirection(maze, nextPos);
       if (p.symbol === ".") {
-        return [p.symbol, p.pos]
+        return [p.symbol, p.pos];
       }
-    }).filter(Boolean)
+    }).filter(Boolean);
 
     console.log(dotsOnLeft, dotsOnRight);
 
     if (left) {
-
     }
 
     direction = nextDir;
@@ -106,7 +105,7 @@ function process2() {
     i++;
 
     if (direction.symbol === startSymbol) {
-      console.log('end of maze');
+      console.log("end of maze");
       return i / 2;
     }
   }
