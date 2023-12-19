@@ -1,4 +1,4 @@
-import { printResults, sum } from "../utils/utils.ts";
+import { hexToDec, printResults, sum } from "../utils/utils.ts";
 import { part, file, readFileLineByLine } from "../utils/bunUtils.ts";
 
 
@@ -7,9 +7,10 @@ async function run() {
     await readFileLineByLine(file, part1);
     const result = process1();
     printResults(62, result);
+    printResults(108909, result);
   } else {
-    await readFileLineByLine(file, part1);
-    const result = process2();
+    await readFileLineByLine(file, part2);
+    const result = process1();
     printResults(145, result);
   }
 }
@@ -26,15 +27,35 @@ function part1(line: string) {
   steps.push(step)
 }
 
+function part2(line: string) {
+  const [, , color] = line.split(' ')
+
+  const count = +hexToDec(color.slice(2, 7))
+  const directionHex = color.slice(7, 8)
+  const direction = getDirectionFromHex(directionHex)
+
+  const step: Step = {
+    direction,
+    count: +count,
+    color
+  }
+
+  steps.push(step)
+}
+
 function process1() {
   const sides = {left: [], right: []}
-  const res = walk({ modifier, steps, point: [0, 0], sides, visitvisiteded: [[0, 0]] })
+  const res = walk({ modifier, steps, point: [0, 0], sides, visited: [[0, 0]] })
 
-  const maze = getMazeFromVisitedAndSides(res[0].visited!, res[0].sides!);
+  const polygons = res[0].visited!.slice(0, - 1)
 
-  const mazeResult = maze.map(l => l.map(l => l != ' ' ? 1 : 0)).flat()
+  return calculatePolygonArea(polygons)
+  // console.log(calculatePolygonArea([[0, 0], [5, 0], [5,5], [4,5], [4,0], [1,0], [1,5], [1,5], [1, 10], [0, 10]]));
+  // const maze = getMazeFromVisitedAndSides(res[0].visited!, res[0].sides!);
+  // const mazeResult = maze.map(l => l.map(l => l != ' ' ? 1 : 0)).flat()
 
-  return mazeResult
+  // console.log(sum(mazeResult))
+  // printMaze(maze)
 }
 
 function walk(options: WalkOptions): WalkOptions[] {
@@ -48,6 +69,22 @@ function walk(options: WalkOptions): WalkOptions[] {
   }
 
   return nextOptions
+}
+
+function calculatePolygonArea(vertices: Point[]) {
+  let area = 0;
+  let n = vertices.length;
+
+  for (let i = 0; i < n - 1; i++) {
+      area += vertices[i][0] * vertices[i + 1][1];
+      area -= vertices[i][1] * vertices[i + 1][0];
+  }
+
+  // Closing the polygon by considering the last vertex and the first
+  area += vertices[n - 1][0] * vertices[0][1];
+  area -= vertices[n - 1][1] * vertices[0][0];
+
+  return Math.abs(area / 2);
 }
 
 type Step = {
@@ -80,41 +117,66 @@ function modifier(options: WalkOptions) {
   let nextPoint: Point = [x, y]
   const isLast = nextSteps.length === 0
   const { count, direction } = steps[0]
+  const [px, py] = nextVisited[nextVisited.length-2] || []
 
-  for (let i = 0; i < count; i++) {
+  const nextNextDirection = (steps[1] || {}).direction
+
+  const fromTop = py < nextPoint[1]
+  const fromDown = py > nextPoint[1]
+  const toTop = nextNextDirection === 'U'
+  const toDown = nextNextDirection === 'D'
+  const fromRight = px > nextPoint[0]
+  const fromLeft = px < nextPoint[0]
+  const toRight = nextNextDirection === 'R'
+  const toLeft = nextNextDirection === 'L'
+
+  const doubleTop = fromTop && toTop
+  const doubleDown = fromDown && toDown
+  const doubleRight = fromRight && toRight
+  const doubleLeft = fromLeft && toLeft
+
+  // for (let i = 0; i < count; i++) {
+    // const mod = 1
+    let mod = count
     switch (direction) {
       case 'R':
-        nextPoint = [nextPoint[0] + 1, nextPoint[1]]
+        mod = (!py && toDown) || doubleDown ? mod + 1 : (doubleTop ? mod - 1 : mod)
+        nextPoint = [nextPoint[0] + mod, nextPoint[1]]
         nextVisited.push([nextPoint[0], nextPoint[1]])
-        nextSides.left.push([nextPoint[0], nextPoint[1] - 1])
-        nextSides.right.push([nextPoint[0], nextPoint[1] + 1])
+        nextSides.left.push([nextPoint[0], nextPoint[1] - mod])
+        nextSides.right.push([nextPoint[0], nextPoint[1] + mod])
         break;
 
-      case 'L':
-        nextPoint = [nextPoint[0] - 1, nextPoint[1]]
+      case 'L':  {
+        mod = doubleTop ? mod + 1 : (doubleDown ? mod - 1 : mod)
+        nextPoint = [nextPoint[0] - mod, nextPoint[1]]
         nextVisited.push([nextPoint[0], nextPoint[1]])
-        nextSides.left.push([nextPoint[0], nextPoint[1] + 1])
-        nextSides.right.push([nextPoint[0], nextPoint[1] - 1])
-        break;
+        nextSides.left.push([nextPoint[0], nextPoint[1] + mod])
+        nextSides.right.push([nextPoint[0], nextPoint[1] - mod])
+      } break;
 
       case 'U':
-        nextPoint = [nextPoint[0], nextPoint[1] - 1]
+        mod = doubleRight ? mod + 1 : (doubleLeft ? mod - 1 : mod)
+        nextPoint = [nextPoint[0], nextPoint[1] - mod]
         nextVisited.push([nextPoint[0], nextPoint[1]])
-        nextSides.left.push([nextPoint[0] - 1, nextPoint[1]])
-        nextSides.right.push([nextPoint[0] + 1, nextPoint[1]])
+        nextSides.left.push([nextPoint[0] - mod, nextPoint[1]])
+        nextSides.right.push([nextPoint[0] + mod, nextPoint[1]])
         break;
 
       case 'D':
-        nextPoint = [nextPoint[0], nextPoint[1] + 1]
+        mod = doubleLeft ? mod + 1 : (doubleRight ? mod - 1 : mod)
+        nextPoint = [nextPoint[0], nextPoint[1] + mod]
         nextVisited.push([nextPoint[0], nextPoint[1]])
-        nextSides.left.push([nextPoint[0] + 1, nextPoint[1]])
-        nextSides.right.push([nextPoint[0] - 1, nextPoint[1]])
+        nextSides.left.push([nextPoint[0] + mod, nextPoint[1]])
+        nextSides.right.push([nextPoint[0] - mod, nextPoint[1]])
         break;
 
       default:
         break;
-    }
+    // }
   }
+
+  // console.log(direction, count, nextPoint, JSON.stringify({doubleLeft, doubleRight, doubleTop, doubleDown}));
 
   const next: WalkOptions = {
     ...options,
@@ -226,6 +288,20 @@ function fillInsideMaze(maze: string[][], points: Point[], added: Point[] = []) 
 
 function printMaze(maze: string[][]) {
   console.log(maze.map(l => l.join('')).join('\n'));
+}
+
+function getDirectionFromHex(directionHex: string) {
+  const directionDec = +hexToDec(directionHex)
+  switch (directionDec) {
+    case 0:
+      return "R"
+    case 1:
+      return "D"
+    case 2:
+      return "L"
+    default:
+      return "U"
+  }
 }
 
 run();
