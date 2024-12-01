@@ -1,12 +1,16 @@
 #!/bin/bash
 
+dayOFmonth=$(date +%d)
+day=${1:-$dayOFmonth}
 
-if [ ! -d "$1" ]; then
-  echo "directory $1 not exists"
+if [ ! -d "$day" ]; then
+  echo "directory $day not exists"
 
-  cp -r _ $1
+  cp -r _ $day
 fi
 
-cd "$1"
+cd "$day"
 
-bun --watch run index.ts
+# time node --experimental-strip-types --experimental-transform-types index.ts
+# time deno run --allow-read --unstable-sloppy-imports --watch index.ts
+time bun index.ts

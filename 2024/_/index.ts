@@ -3,10 +3,10 @@ import { sum } from '../../utils/numbers';
 import { type Answers, run } from '../../utils/run';
 
 const answers: Answers = {
-  test1: 77,
-  input1: 54304,
-  test2: 281,
-  input2: 54418
+  test1: 0,
+  input1: 0,
+  test2: 0,
+  input2: 0
 }
 
 run(runFirstPart, runSecondPart, answers);
