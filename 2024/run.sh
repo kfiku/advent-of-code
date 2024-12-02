@@ -11,6 +11,4 @@ fi
 
 cd "$day"
 
-# time node --experimental-strip-types --experimental-transform-types index.ts
-# time deno run --allow-read --unstable-sloppy-imports --watch index.ts
-time bun index.ts
+bun --watch index.ts
