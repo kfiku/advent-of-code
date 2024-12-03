@@ -1,22 +1,22 @@
-import { byLine } from '../../utils/files';
-import { sum } from '../../utils/numbers';
-import { type Answers, run } from '../../utils/run';
+import { byLine } from '../../utils/files'
+import { sum } from '../../utils/numbers'
+import { type Answers, run } from '../../utils/run'
 
 const answers: Answers = {
   test1: 11,
   input1: 2164381,
   test2: 31,
-  input2: 20719933
+  input2: 20719933,
 }
 
-run(runFirstPart, runSecondPart, answers);
+run(runFirstPart, runSecondPart, answers)
 
 function runFirstPart(input: string) {
   const lints = byLine(input)
   const a: number[] = []
   const b: number[] = []
-  lints.forEach(line => {
-    const [aa, bb] = line.split(/ +/).map(e => +(e.trim()))
+  lints.forEach((line) => {
+    const [aa, bb] = line.split(/ +/).map((e) => +e.trim())
     a.push(aa)
     b.push(bb)
   })
@@ -36,8 +36,8 @@ function runSecondPart(input: string) {
   const lints = byLine(input)
   const a: number[] = []
   const b: number[] = []
-  lints.forEach(line => {
-    const [aa, bb] = line.split(/ +/).map(e => +(e.trim()))
+  lints.forEach((line) => {
+    const [aa, bb] = line.split(/ +/).map((e) => +e.trim())
     a.push(aa)
     b.push(bb)
   })
@@ -46,7 +46,6 @@ function runSecondPart(input: string) {
     const bm = b.filter((be) => be === ae)
     return ae * bm.length
   })
-  
+
   return sum(result)
 }
-

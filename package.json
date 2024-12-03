@@ -4,13 +4,15 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "fix": "prettier --write ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "@total-typescript/ts-reset": "^0.5.1",
-    "@types/node": "^22.10.1"
+    "@types/node": "^22.10.1",
+    "prettier": "^3.4.1"
   }
 }
