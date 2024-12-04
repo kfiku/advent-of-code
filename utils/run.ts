@@ -24,7 +24,11 @@ export async function run(runFirstPart, runSecondPart, answers: Answers) {
 
     const input2result = runSecondPart(inputLines, answers)
     printResult('input2', input2result, answers)
-  } catch (error) {}
+  } catch (error) {
+    if (error.message !== 'FAIL') {
+      console.log(error)
+    }
+  }
 }
 
 function printResult(key: keyof Answers, value: number, answers: Answers) {
@@ -36,6 +40,6 @@ function printResult(key: keyof Answers, value: number, answers: Answers) {
   } else {
     console.log(key, 'FAIL', value, 'should be:', expected)
 
-    throw new Error()
+    throw new Error('FAIL')
   }
 }

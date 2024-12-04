@@ -7,3 +7,7 @@ export function readFile(filePath: string) {
 export function byLine(input: string) {
   return input.split('\n')
 }
+
+export function byLineAndLetter(input: string) {
+  return input.split('\n').map((l) => l.split(''))
+}
