@@ -1,6 +1,7 @@
 import { byLineAndLetter } from '../../utils/files'
 import { sum } from '../../utils/numbers'
 import { type Answers, run } from '../../utils/run'
+import { Pos, Matrix, posKey } from '../../utils/matrix/matrix'
 
 const answers: Answers = {
   test1: 41,
@@ -8,9 +9,6 @@ const answers: Answers = {
   test2: 6,
   input2: 1443,
 }
-
-type Pos = [number, number]
-type Matrix = string[][]
 
 const emptySpace = '.'
 const obstruction = '#'
@@ -101,8 +99,4 @@ function updateMatrix(matrix: Matrix, [x, y]: Pos, string: string) {
   newMatrix[y][x] = string
 
   return newMatrix
-}
-
-function posKey([x, y]: Pos) {
-  return `${x}.${y}`
 }
