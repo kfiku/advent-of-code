@@ -11,3 +11,7 @@ export function byLine(input: string) {
 export function byLineAndLetter(input: string) {
   return input.split('\n').map((l) => l.split(''))
 }
+
+export function byLetter(input: string) {
+  return input.split('')
+}
