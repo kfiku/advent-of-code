@@ -1,5 +1,6 @@
 export type Pos = [number, number]
-export type Matrix = string[][]
+export type Matrix<T = string> = T[][]
+export type NumMatrix = Matrix<number>
 
 export function posKey([x, y]: Pos) {
   return `${x}.${y}`
