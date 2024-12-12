@@ -1,7 +1,7 @@
 import { byLineAndLetter } from '../../utils/files'
 import { sum } from '../../utils/numbers'
 import { type Answers, run } from '../../utils/run'
-import { Pos, Matrix, posKey } from '../../utils/matrix/matrix'
+import { Pos, Matrix, posKey, directions } from '../../utils/matrix/matrix'
 
 const answers: Answers = {
   test1: 41,
@@ -13,12 +13,6 @@ const answers: Answers = {
 const emptySpace = '.'
 const obstruction = '#'
 const guard = '^'
-const directions: Pos[] = [
-  [0, -1],
-  [1, 0],
-  [0, 1],
-  [-1, 0],
-]
 
 run(runFirstPart, runSecondPart, answers)
 

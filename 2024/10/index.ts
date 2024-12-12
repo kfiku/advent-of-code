@@ -1,5 +1,5 @@
 import { byLineAndLetter } from '../../utils/files'
-import { NumMatrix, Pos, posKey } from '../../utils/matrix/matrix'
+import { directions, NumMatrix, Pos, posKey } from '../../utils/matrix/matrix'
 import { sum } from '../../utils/numbers'
 import { type Answers, run } from '../../utils/run'
 
@@ -9,13 +9,6 @@ const answers: Answers = {
   test2: 81,
   input2: 1541,
 }
-
-const directions: Pos[] = [
-  [0, -1],
-  [1, 0],
-  [0, 1],
-  [-1, 0],
-]
 
 run(runFirstPart, runSecondPart, answers)
 
