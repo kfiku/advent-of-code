@@ -54,6 +54,9 @@ function getConfigs(input: string) {
 function getConst(configs: { buttonA: number[]; buttonB: number[]; prize: number[] }[]) {
   return configs
     .map(({ buttonA: [ax, ay], buttonB: [bx, by], prize: [px, py] }) => {
+      // console.log('ax', '*', 'x +', 'bx', '*', 'y =', 'px')
+      // console.log('ay', '*', 'x +', 'by', '*', 'y =', 'py')
+
       const y = +((py - (ay * px) / ax) * (ax / (by * ax - ay * bx))).toFixed(3)
 
       if (y === Math.round(y)) {
