@@ -17,6 +17,15 @@ export function getFromMatrix(matrix: Matrix, [x, y]: Pos) {
   return matrix[y]?.[x]
 }
 
-export function printMatrix(matrix: Matrix) {
-  console.log(matrix.map((l) => l.join('')).join('\n'))
+export function printMatrix([mx, my]: Pos, points: Map<string, number | string>) {
+  for (let y = 0; y < my; y++) {
+    let line = ''
+
+    for (let x = 0; x < mx; x++) {
+      const point = points.get(posKey([x, y]))
+      line += point ? point : '.'
+    }
+
+    console.log(line)
+  }
 }
