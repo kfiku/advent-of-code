@@ -9,6 +9,17 @@ export const directions: Pos[] = [
   [-1, 0],
 ]
 
+export const directionsPlus: Pos[] = [
+  [0, -1],
+  [1, 0],
+  [0, 1],
+  [-1, 0],
+  [1, 1],
+  [-1, -1],
+  [-1, 1],
+  [1, -1],
+]
+
 export function posKey([x, y]: Pos) {
   return `${x}.${y}`
 }
@@ -17,15 +28,24 @@ export function getFromMatrix(matrix: Matrix, [x, y]: Pos) {
   return matrix[y]?.[x]
 }
 
-export function printMatrix([mx, my]: Pos, points: Map<string, number | string>) {
+export function printMatrix(pos: Pos, points: Map<string, number | string>) {
+  const matrix = generateMatrix(pos, points)
+
+  console.log(matrix.join('\n'))
+}
+
+export function generateMatrix([mx, my]: Pos, points: Map<string, string | number>) {
+  const lines: string[] = []
   for (let y = 0; y < my; y++) {
     let line = ''
 
     for (let x = 0; x < mx; x++) {
       const point = points.get(posKey([x, y]))
-      line += point ? point : '.'
+      line += point ? point : ' '
     }
 
-    console.log(line)
+    lines.push(line)
   }
+
+  return lines
 }

@@ -14,19 +14,19 @@ export async function run(runFirstPart, runSecondPart, answers: Answers) {
     let startTime = 0
 
     startTime = performance.now()
-    const test1result = runFirstPart(testInput, 'test')
+    const test1result = await runFirstPart(testInput, 'test')
     printResult('test1', test1result, answers, startTime)
 
     startTime = performance.now()
-    const input1result = runFirstPart(input, 'input')
+    const input1result = await runFirstPart(input, 'input')
     printResult('input1', input1result, answers, startTime)
 
     startTime = performance.now()
-    const test2result = runSecondPart(testInput, 'test')
+    const test2result = await runSecondPart(testInput, 'test')
     printResult('test2', test2result, answers, startTime)
 
     startTime = performance.now()
-    const input2result = runSecondPart(input, 'input')
+    const input2result = await runSecondPart(input, 'input')
     printResult('input2', input2result, answers, startTime)
 
     console.log('-----')
