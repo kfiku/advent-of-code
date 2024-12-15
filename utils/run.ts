@@ -7,6 +7,8 @@ export interface Answers {
   input2: number
 }
 
+export type InputType = 'test' | 'input'
+
 export async function run(runFirstPart, runSecondPart, answers: Answers) {
   try {
     const input = readFile('./input.txt')
