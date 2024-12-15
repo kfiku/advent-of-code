@@ -1,5 +1,6 @@
+import { InputType } from 'zlib'
 import { byLine } from '../../utils/files'
-import { directionsPlus, Matrix, Pos, posKey, printMatrix } from '../../utils/matrix/matrix'
+import { directionsPlus, Matrix, Pos, posKey, printMatrixFromMap } from '../../utils/matrix/matrix'
 import { sum } from '../../utils/numbers'
 import { type Answers, run } from '../../utils/run'
 
@@ -12,7 +13,7 @@ const answers: Answers = {
 
 run(runFirstPart, runSecondPart, answers)
 
-function runFirstPart(input: string, type: 'test' | 'input') {
+function runFirstPart(input: string, type: InputType) {
   const robots = getRobots(input)
   const [mx, my] = type === 'test' ? [11, 7] : [101, 103]
   const [middleX, middleY] = [Math.floor(mx / 2), Math.floor(my / 2)]
@@ -55,7 +56,7 @@ function runFirstPart(input: string, type: 'test' | 'input') {
   return sum([result])
 }
 
-async function runSecondPart(input: string, type: 'test' | 'input') {
+async function runSecondPart(input: string, type: InputType) {
   if (type === 'test') {
     return 1
   }
@@ -99,9 +100,7 @@ async function runSecondPart(input: string, type: 'test' | 'input') {
 
     if (history.size > 50) {
       console.log('----------', seconds, '------------')
-      printMatrix([mx, my], robotsMap)
-
-      return seconds
+      printMatrixFromMap([mx, my], robotsMap)
     }
   }
 

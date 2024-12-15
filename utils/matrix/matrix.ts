@@ -43,7 +43,6 @@ export function printMatrixFromMap(pos: Pos, points: Map<string, number | string
   const mp2 = generateMatrix(pos, points)
 
   printMatrix(mp2)
-  // console.log(mp2.map((l) => l.join('')).join('\n'))
 }
 
 function generateMatrix([mx, my]: Pos, points: Map<string, string | number>) {

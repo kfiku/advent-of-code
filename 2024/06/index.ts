@@ -1,7 +1,7 @@
 import { byLineAndLetter } from '../../utils/files'
 import { sum } from '../../utils/numbers'
 import { type Answers, run } from '../../utils/run'
-import { Pos, Matrix, posKey, directions } from '../../utils/matrix/matrix'
+import { Pos, Matrix, posKey, directions, getElementPosition } from '../../utils/matrix/matrix'
 
 const answers: Answers = {
   test1: 41,
@@ -77,15 +77,7 @@ function walk(pos: Pos, dirId: number, matrix: Matrix, history = new Map()) {
 }
 
 function getGuardPosition(matrix: Matrix) {
-  for (let y = 0; y < matrix.length; y++) {
-    for (let x = 0; x < matrix[y].length; x++) {
-      const element = matrix[y]?.[x]
-
-      if (element === guard) {
-        return [x, y] as Pos
-      }
-    }
-  }
+  return getElementPosition(guard, matrix)
 }
 
 function updateMatrix(matrix: Matrix, [x, y]: Pos, string: string) {
