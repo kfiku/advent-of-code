@@ -138,28 +138,15 @@ function walk(pos: Pos, move: string, matrix: Matrix, loop = 0) {
         nextNextMatrix[y][x] = nnp
         nextNextMatrix[ny][nx] = point
 
-        const secondMove =
-          (point === boxStart && nextNextMatrix[y][x + 1] === empty) ||
-          (point === boxEnd && nextNextMatrix[y][x - 1] === empty)
+        const pairX = x + (point === boxStart ? 1 : -1)
+        const secondMove = nextNextMatrix[y][pairX] === empty
 
         if (boxDoubleMove && !secondMove) {
-          if (point === boxStart) {
-            const posBoxEnd: Pos = [x + 1, y]
+          const posBoxEnd: Pos = [pairX, y]
+          const { nextMatrix: nextNextMatrix1, moved } = walk(posBoxEnd, move, nextNextMatrix, loop + 1)
 
-            const { nextMatrix: nextNextMatrix1, moved } = walk(posBoxEnd, move, nextNextMatrix, loop + 1)
-
-            if (moved) {
-              return { nextPos: nextPos, nextMatrix: nextNextMatrix1, moved: true }
-            }
-          }
-
-          if (point === boxEnd) {
-            const posBoxStart: Pos = [x - 1, y]
-            const { nextMatrix: nextNextMatrix2, moved } = walk(posBoxStart, move, nextNextMatrix, loop + 1)
-
-            if (moved) {
-              return { nextPos: nextPos, nextMatrix: nextNextMatrix2, moved: true }
-            }
+          if (moved) {
+            return { nextPos: nextPos, nextMatrix: nextNextMatrix1, moved: true }
           }
 
           return { nextPos: pos, nextMatrix: matrix, moved: false }
@@ -175,27 +162,15 @@ function walk(pos: Pos, move: string, matrix: Matrix, loop = 0) {
       nextMatrix[y][x] = nextPoint
       nextMatrix[ny][nx] = point
 
-      const secondMove =
-        (point === boxStart && nextMatrix[y][x + 1] === empty) || (point === boxEnd && nextMatrix[y][x - 1] === empty)
+      const pairX = x + (point === boxStart ? 1 : -1)
+      const secondMove = nextMatrix[y][pairX] === empty
 
       if (boxDoubleMove && !secondMove) {
-        if (point === boxStart) {
-          const posBoxEnd: Pos = [x + 1, y]
+        const posBoxEnd: Pos = [pairX, y]
+        const { nextMatrix: nextNextMatrix, moved } = walk(posBoxEnd, move, nextMatrix, loop + 1)
 
-          const { nextMatrix: nextNextMatrix, moved } = walk(posBoxEnd, move, nextMatrix, loop + 1)
-
-          if (moved) {
-            return { nextPos: nextPos, nextMatrix: nextNextMatrix, moved: true }
-          }
-        }
-
-        if (point === boxEnd) {
-          const posBoxStart: Pos = [x - 1, y]
-          const { nextMatrix: nextNextMatrix, moved } = walk(posBoxStart, move, nextMatrix, loop + 1)
-
-          if (moved) {
-            return { nextPos: nextPos, nextMatrix: nextNextMatrix, moved: true }
-          }
+        if (moved) {
+          return { nextPos: nextPos, nextMatrix: nextNextMatrix, moved: true }
         }
 
         return { nextPos: pos, nextMatrix: matrix, moved: false }
