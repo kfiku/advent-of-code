@@ -16,6 +16,21 @@ export const directionsMap = {
   '<': directions[3],
 }
 
+const directionsMapEntries = Object.entries(directionsMap)
+
+export function getDirectionSymbol([dx, dy]: Pos) {
+  const entry = directionsMapEntries.find(([, d]) => dx === d[0] && dy === d[1])!
+
+  return entry[0]
+}
+
+export const directionsRotationMap = {
+  '^': ['<', '>'],
+  '>': ['^', 'v'],
+  v: ['<', '>'],
+  '<': ['^', 'v'],
+}
+
 export const directionsPlus: Pos[] = [
   [0, -1],
   [1, 0],
@@ -36,7 +51,12 @@ export function getFromMatrix(matrix: Matrix, [x, y]: Pos) {
 }
 
 export function printMatrix(matrix: (string | number)[][]) {
-  console.log(matrix.map((l) => l.join('')).join('\n'))
+  console.log(
+    matrix
+      .filter(Boolean)
+      .map((l) => l.join(''))
+      .join('\n'),
+  )
 }
 
 export function printMatrixFromMap(pos: Pos, points: Map<string, number | string>) {
@@ -63,7 +83,7 @@ function generateMatrix([mx, my]: Pos, points: Map<string, string | number>) {
 
 export function getElementPosition(search: string, matrix: Matrix) {
   for (let y = 0; y < matrix.length; y++) {
-    for (let x = 0; x < matrix[y].length; x++) {
+    for (let x = 0; x < matrix[y]?.length || 0; x++) {
       const element = matrix[y]?.[x]
 
       if (element === search) {
