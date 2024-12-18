@@ -1,10 +1,10 @@
 import { readFile } from './files'
 
 export interface Answers {
-  test1: number
-  input1: number
-  test2: number
-  input2: number
+  test1: number | string
+  input1: number | string
+  test2: number | string
+  input2: number | string
 }
 
 export type InputType = 'test' | 'input'
@@ -39,7 +39,7 @@ export async function run(runFirstPart, runSecondPart, answers: Answers) {
   }
 }
 
-function printResult(key: keyof Answers, value: number, answers: Answers, startTime: number) {
+function printResult(key: keyof Answers, value: number | string, answers: Answers, startTime: number) {
   const expected = answers[key]
   const ok = value === expected
   const time = ((performance.now() - startTime) / 1000).toFixed(6) + 's'

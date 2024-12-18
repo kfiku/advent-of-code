@@ -1,6 +1,6 @@
 import { byLine } from '../../utils/files'
 import { sum } from '../../utils/numbers'
-import { type Answers, run } from '../../utils/run'
+import { type Answers, InputType, run } from '../../utils/run'
 
 const answers: Answers = {
   test1: 0,
@@ -11,13 +11,13 @@ const answers: Answers = {
 
 run(runFirstPart, runSecondPart, answers)
 
-function runFirstPart(input: string) {
+function runFirstPart(input: string, type: InputType) {
   const lints = byLine(input)
 
   return sum([lints.length])
 }
 
-function runSecondPart(input: string) {
+function runSecondPart(input: string, type: InputType) {
   const lints = byLine(input)
 
   return sum([lints.length])

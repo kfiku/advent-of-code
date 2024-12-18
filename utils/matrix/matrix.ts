@@ -65,14 +65,14 @@ export function printMatrixFromMap(pos: Pos, points: Map<string, number | string
   printMatrix(mp2)
 }
 
-function generateMatrix([mx, my]: Pos, points: Map<string, string | number>) {
+export function generateMatrix([mx, my]: Pos, points: Map<string, string | number>, empty = ' ') {
   const lines: (string | number)[][] = []
   for (let y = 0; y < my; y++) {
     let line: (string | number)[] = []
 
     for (let x = 0; x < mx; x++) {
       const point = points.get(posKey([x, y]))
-      line.push(point ? point : ' ')
+      line.push(point ? point : empty)
     }
 
     lines.push(line)
