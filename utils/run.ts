@@ -1,10 +1,10 @@
 import { readFile } from './files'
 
 export interface Answers {
-  test1: number | string
-  input1: number | string
-  test2: number | string
-  input2: number | string
+  test1: number | string | bigint
+  input1: number | string | bigint
+  test2: number | string | bigint
+  input2: number | string | bigint
 }
 
 export type InputType = 'test' | 'input'
