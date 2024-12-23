@@ -12,9 +12,9 @@ const answers: Answers = {
 run(runFirstPart, runSecondPart, answers)
 
 function runFirstPart(input: string, type: InputType) {
-  const lints = byLine(input)
+  const lines = byLine(input)
 
-  return sum([lints.length])
+  return sum([lines.length])
 }
 
 function runSecondPart(input: string, type: InputType) {

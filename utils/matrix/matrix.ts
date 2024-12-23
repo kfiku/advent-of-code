@@ -92,3 +92,17 @@ export function getElementPosition(search: string, matrix: Matrix) {
     }
   }
 }
+
+export function matrixToPosMap(matrix: Matrix) {
+  const map = new Map<string, Pos>()
+
+  for (let y = 0; y < matrix.length; y++) {
+    for (let x = 0; x < matrix[y]?.length || 0; x++) {
+      const element = matrix[y]?.[x]
+
+      map.set(element, [x, y])
+    }
+  }
+
+  return map
+}
