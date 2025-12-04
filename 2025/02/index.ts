@@ -95,9 +95,9 @@ function isInvalid2(number: number) {
       val += r
     }
 
-    if (val === s) {
-      console.log(s)
-    }
+    // if (val === s) {
+    //   console.log(s)
+    // }
 
     return val === s
   })
