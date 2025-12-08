@@ -42,13 +42,19 @@ export async function run(runFirstPart, runSecondPart, answers: Answers) {
 function printResult(key: keyof Answers, value: number | string, answers: Answers, startTime: number) {
   const expected = answers[key]
   const ok = value === expected
-  const time = ((performance.now() - startTime) / 1000).toFixed(6) + 's'
+  const time = ((performance.now() - startTime) / 1000).toFixed(4) + 's'
 
   if (ok) {
-    console.log(key, 'OK', value, time)
+    log(key, `✓ ${value}`, time)
   } else {
-    console.log(key, 'FAIL', value, 'should be:', expected, time)
+    log(key, `x ${value} (OK: ${expected})`, time)
 
     throw new Error('FAIL')
   }
 }
+
+function log(a: string, c: number | string, d: string) {
+  console.log(a + '\t', c + (c.toString().length > 9 ? '\t' : '\t\t\t'), d + '\t')
+}
+
+// 1662    0.0031s
