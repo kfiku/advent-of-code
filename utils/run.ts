@@ -53,8 +53,8 @@ function printResult(key: keyof Answers, value: number | string, answers: Answer
   }
 }
 
-function log(a: string, c: number | string, d: string) {
-  console.log(a + '\t', c + (c.toString().length > 9 ? '\t' : '\t\t\t'), d + '\t')
+function log(key: string, result: number | string, time: string) {
+  console.log(key.padStart(6) + '\t', result.toString().padEnd(15) + '\t', time + '\t')
 }
 
 // 1662    0.0031s
