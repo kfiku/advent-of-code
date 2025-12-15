@@ -1,5 +1,6 @@
 #!/bin/bash
 
-cd 2024
+cd $1
 
-source ./run.sh $1
+source ./run.sh $2
+

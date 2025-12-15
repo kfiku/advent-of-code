@@ -11,4 +11,7 @@ fi
 
 cd "$day"
 
+
+code ./index.ts ./test.txt ./input.txt
+
 bun --watch index.ts
